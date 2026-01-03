@@ -1087,27 +1087,40 @@
         // RECORD PATH POINT DURING RUN
         // ================================
         function recordPathPoint(lat, lng) {
-            if (!window.isRunning) return;
+    if (!window.isRunning) return;
 
-            // Check minimum distance from last point
-            if (window.runPath.length > 0) {
-                const last = window.runPath[window.runPath.length - 1];
-                const dist = calculateDistance(last.lat, last.lng, lat, lng);
-                if (dist < window.MIN_POINT_DISTANCE) {
-                    return; // Too close, skip
-                }
-            }
+    // Ignore if GPS accuracy is too bad (unreliable reading)
+    if (window.currentPosition.accuracy > 30) {
+        console.log('⚠️ GPS accuracy too low, skipping point');
+        return;
+    }
 
-            // Add new point
-            window.runPath.push({ lat, lng, timestamp: Date.now() });
-            console.log(`📍 Point ${window.runPath.length}: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
-
-            // Update trail on map
-            updateTrailOnMap();
-
-            // Check if loop can be closed
-            checkLoopStatus();
+    // Check minimum distance from last point
+    if (window.runPath.length > 0) {
+        const last = window.runPath[window.runPath.length - 1];
+        const dist = calculateDistance(last.lat, last.lng, lat, lng);
+        
+        // Dynamic threshold: at least 5m OR half of GPS accuracy, whichever is bigger
+        const threshold = Math.max(5, window.currentPosition.accuracy * 0.5);
+        
+        if (dist < threshold) {
+            return; // GPS jitter, skip
         }
+    }
+
+    // Add new point
+    window.runPath.push({ lat, lng, timestamp: Date.now() });
+    console.log(`📍 Point ${window.runPath.length}: ${lat.toFixed(6)}, ${lng.toFixed(6)} (accuracy: ±${Math.round(window.currentPosition.accuracy)}m)`);
+
+    // Update trail on map
+    updateTrailOnMap();
+
+    // Update live stats
+    updateLiveStats();
+
+    // Check if loop can be closed
+    checkLoopStatus();
+}
 
         // ================================
         // UPDATE TRAIL POLYLINE ON MAP
