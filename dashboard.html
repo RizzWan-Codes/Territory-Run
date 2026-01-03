@@ -25,19 +25,16 @@
     
     <!-- Mappls Map SDK -->
     <script src="https://apis.mappls.com/advancedmaps/api/798fea4714e50cccb239aaf472ee4fde/map_sdk?layer=vector&v=3.0&callback=initMap1"></script>
-<style id="mappls-style"></style>
+    <style id="mappls-style"></style>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; overflow: hidden; background: #050507; }
         
-        /* Scrollbar Styling */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #12121a; }
         ::-webkit-scrollbar-thumb { background: #10B981; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #059669; }
 
-        /* Sidebar */
         .sidebar {
             width: 320px;
             height: 100vh;
@@ -49,7 +46,6 @@
             z-index: 50;
         }
 
-        /* Glass Card Effect */
         .glass-card {
             background: rgba(18, 18, 26, 0.8);
             backdrop-filter: blur(12px);
@@ -57,23 +53,20 @@
             border-radius: 16px;
         }
 
-        /* Map Container */
         #map {
             width: 100%;
             height: 100%;
             background: #050507;
         }
 
-        /* Pulse Animation for Live Tracking */
         @keyframes pulse-ring {
             0% { transform: scale(0.8); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
+            100% { transform: scale(2.5); opacity: 0; }
         }
         .pulse-ring {
             animation: pulse-ring 1.5s ease-out infinite;
         }
 
-        /* Run Status Badge */
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -87,9 +80,8 @@
         }
         .status-idle { background: rgba(107, 114, 128, 0.2); color: #9CA3AF; }
         .status-running { background: rgba(16, 185, 129, 0.2); color: #10B981; }
-        .status-danger { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+        .status-closable { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
 
-        /* Leaderboard Entry Animation */
         .leaderboard-entry {
             transition: all 0.3s ease;
         }
@@ -98,7 +90,6 @@
             transform: translateX(4px);
         }
 
-        /* Button Styles */
         .btn-primary {
             background: linear-gradient(135deg, #10B981 0%, #059669 100%);
             color: white;
@@ -131,12 +122,25 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
         }
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+
+        .btn-success {
+            background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            animation: glow-pulse 1s infinite;
         }
 
-        /* Stats Card */
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); }
+            50% { box-shadow: 0 4px 30px rgba(34, 197, 94, 0.6); }
+        }
+
         .stat-card {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
             border: 1px solid rgba(16, 185, 129, 0.2);
@@ -144,12 +148,7 @@
             padding: 16px;
             transition: all 0.3s ease;
         }
-        .stat-card:hover {
-            border-color: rgba(16, 185, 129, 0.4);
-            transform: scale(1.02);
-        }
 
-        /* Control Panel */
         .control-panel {
             position: absolute;
             bottom: 24px;
@@ -167,16 +166,14 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
-        /* Run Stats Overlay */
         .run-stats-overlay {
             position: absolute;
             top: 24px;
             right: 24px;
             z-index: 100;
-            min-width: 200px;
+            min-width: 240px;
         }
 
-        /* Safety Warning */
         .safety-warning {
             position: absolute;
             top: 24px;
@@ -195,7 +192,6 @@
             max-width: 90%;
         }
 
-        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -212,7 +208,6 @@
             pointer-events: none;
         }
 
-        /* Spinner */
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
@@ -225,7 +220,6 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Mobile Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 position: fixed;
@@ -233,12 +227,8 @@
                 transition: left 0.3s ease;
                 z-index: 200;
             }
-            .sidebar.open {
-                left: 0;
-            }
-            .mobile-menu-btn {
-                display: flex !important;
-            }
+            .sidebar.open { left: 0; }
+            .mobile-menu-btn { display: flex !important; }
             .sidebar-overlay {
                 display: block;
                 position: fixed;
@@ -255,7 +245,6 @@
             }
         }
 
-        /* Notification Toast */
         .toast {
             position: fixed;
             bottom: 100px;
@@ -283,76 +272,75 @@
         .toast.error { border-color: rgba(239, 68, 68, 0.5); }
         .toast.warning { border-color: rgba(245, 158, 11, 0.5); }
 
-        /* Trail Path Animation */
-        @keyframes dash {
-            to { stroke-dashoffset: -20; }
-        }
-
-        /* Rank Badge Colors */
         .rank-1 { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); }
         .rank-2 { background: linear-gradient(135deg, #C0C0C0 0%, #A0A0A0 100%); }
         .rank-3 { background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%); }
 
-        /* Profile Avatar */
         .avatar-ring {
             padding: 3px;
             background: linear-gradient(135deg, #10B981 0%, #059669 50%, #10B981 100%);
             border-radius: 50%;
         }
 
-        /* Glow Effects */
-        .glow-green {
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-        }
-        .glow-red {
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        @media (max-width: 768px) {
+            .control-panel {
+                bottom: 100px;
+                padding: 12px 16px;
+                gap: 12px;
+                max-width: 95%;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .control-panel button {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
         }
 
-        /* Control Panel */
-.control-panel {
-    position: absolute;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 24px;
-    background: rgba(10, 10, 15, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
+        /* Live Stats Panel - ALWAYS VISIBLE */
+        .live-stats-panel {
+            position: absolute;
+            top: 80px;
+            left: 24px;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            min-width: 200px;
+        }
 
-/* Mobile adjustments for control panel */
-@media (max-width: 768px) {
-    .control-panel {
-        bottom: 100px; /* Move it higher on mobile */
-        padding: 12px 16px;
-        gap: 12px;
-        max-width: 90%;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .control-panel button {
-        padding: 10px 18px;
-        font-size: 14px;
-    }
-    
-    .control-panel #locationStatus {
-        width: 100%;
-        justify-content: center;
-        padding-bottom: 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .control-panel .w-px {
-        display: none; /* Hide separator on mobile */
-    }
-}
+        .live-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .live-stat:last-child { border-bottom: none; }
+        .live-stat-label { font-size: 12px; color: #9CA3AF; text-transform: uppercase; }
+        .live-stat-value { font-size: 18px; font-weight: 700; color: #10B981; }
+        .live-stat-value.large { font-size: 24px; }
+
+        /* Follow mode indicator */
+        .follow-indicator {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 100;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #10B981;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .follow-indicator.hidden { display: none; }
     </style>
 </head>
 <body class="bg-dark-950 text-white antialiased">
@@ -371,12 +359,11 @@
 
         <!-- Sidebar -->
         <aside id="sidebar" class="sidebar">
-            
             <!-- Logo -->
             <div class="p-6 border-b border-white/5">
                 <a href="index.html" class="flex items-center space-x-3 group">
                     <div class="w-10 h-10 bg-gradient-to-br from-primary to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
                             <line x1="9" y1="3" x2="9" y2="18"/>
                             <line x1="15" y1="6" x2="15" y2="21"/>
@@ -400,7 +387,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Stats -->
                 <div class="grid grid-cols-2 gap-3 mt-5">
                     <div class="stat-card">
                         <div class="flex items-center space-x-2 mb-1">
@@ -429,9 +415,7 @@
                     <h4 class="font-semibold text-sm uppercase tracking-wider text-gray-400">Leaderboard</h4>
                     <span class="text-xs text-primary">Top 10</span>
                 </div>
-                
                 <div id="leaderboard" class="flex-1 overflow-y-auto space-y-2 pr-2">
-                    <!-- Leaderboard entries will be inserted here -->
                     <div class="text-center py-8 text-gray-500">
                         <div class="spinner mx-auto mb-3" style="width: 24px; height: 24px; border-width: 2px;"></div>
                         <p class="text-sm">Loading leaderboard...</p>
@@ -442,7 +426,7 @@
             <!-- Logout Button -->
             <div class="p-6 border-t border-white/5">
                 <button onclick="logout()" class="w-full flex items-center justify-center space-x-2 py-3 px-4 rounded-xl bg-dark-800 hover:bg-dark-700 border border-white/5 hover:border-white/10 transition-all text-gray-400 hover:text-white">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
                         <line x1="21" y1="12" x2="9" y2="12"/>
@@ -464,6 +448,12 @@
                 </svg>
             </button>
 
+            <!-- Follow Mode Indicator -->
+            <div id="followIndicator" class="follow-indicator hidden">
+                <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                <span>Following You</span>
+            </div>
+
             <!-- Safety Warning -->
             <div id="safetyWarning" class="safety-warning">
                 <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -471,7 +461,7 @@
                     <line x1="12" y1="9" x2="12" y2="13"/>
                     <line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
-                <span>Stay safe! Avoid traffic and restricted areas while running.</span>
+                <span>Stay safe! Avoid traffic and restricted areas.</span>
                 <button onclick="dismissWarning()" class="ml-2 hover:text-white transition-colors">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -480,36 +470,54 @@
                 </button>
             </div>
 
-            <!-- Run Stats Overlay (visible during run) -->
-            <div id="runStatsOverlay" class="run-stats-overlay hidden">
-                <div class="glass-card p-4 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs text-gray-400 uppercase tracking-wider">Run Status</span>
-                        <span id="runStatusBadge" class="status-badge status-idle">Idle</span>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <p class="text-xs text-gray-500">Distance</p>
-                            <p id="runDistance" class="text-lg font-bold">0 <span class="text-sm font-normal text-gray-400">m</span></p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-500">Duration</p>
-                            <p id="runDuration" class="text-lg font-bold">00:00</p>
-                        </div>
-                    </div>
+            <!-- LIVE STATS PANEL - Shows during run -->
+            <div id="liveStatsPanel" class="live-stats-panel hidden">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs text-gray-400 uppercase tracking-wider">Live Run</span>
+                    <span id="runStatusBadge" class="status-badge status-running">
+                        <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                        Running
+                    </span>
+                </div>
+                
+                <div class="live-stat">
+                    <span class="live-stat-label">Distance</span>
+                    <span id="liveDistance" class="live-stat-value large">0 m</span>
+                </div>
+                
+                <div class="live-stat">
+                    <span class="live-stat-label">Duration</span>
+                    <span id="liveDuration" class="live-stat-value">00:00</span>
+                </div>
+                
+                <div class="live-stat">
+                    <span class="live-stat-label">Points</span>
+                    <span id="livePoints" class="live-stat-value">0</span>
+                </div>
+                
+                <div class="live-stat">
+                    <span class="live-stat-label">Area</span>
+                    <span id="liveArea" class="live-stat-value">0 m²</span>
+                </div>
+                
+                <div class="live-stat">
+                    <span class="live-stat-label">To Start</span>
+                    <span id="liveToStart" class="live-stat-value">-- m</span>
+                </div>
 
-                    <div>
-                        <p class="text-xs text-gray-500">Potential Area</p>
-                        <p id="runPotentialArea" class="text-lg font-bold text-primary">0 <span class="text-sm font-normal text-gray-400">m²</span></p>
+                <div class="live-stat">
+                    <span class="live-stat-label">Speed</span>
+                    <span id="liveSpeed" class="live-stat-value">0 km/h</span>
+                </div>
+                
+                <!-- Loop Progress -->
+                <div id="loopProgressContainer" class="mt-3 hidden">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-400">Loop Progress</span>
+                        <span id="loopProgressText" class="text-primary">0%</span>
                     </div>
-
-                    <div id="loopProgress" class="hidden">
-                        <p class="text-xs text-gray-500 mb-1">Distance to Close Loop</p>
-                        <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
-                            <div id="loopProgressBar" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                        <p id="loopDistanceText" class="text-xs text-gray-400 mt-1">-- m remaining</p>
+                    <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+                        <div id="loopProgressBar" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
@@ -540,10 +548,18 @@
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="6" y="6" width="12" height="12" rx="2"/>
                     </svg>
-                    <span>Stop Run</span>
+                    <span>Cancel</span>
                 </button>
 
-                <button onclick="centerOnUser()" class="p-3 bg-dark-800 hover:bg-dark-700 rounded-xl border border-white/10 transition-all" title="Center on my location">
+                <button id="closeLoopBtn" onclick="closeLoop()" class="btn-success hidden items-center space-x-2">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Capture!</span>
+                </button>
+
+                <button onclick="centerOnUser()" class="p-3 bg-dark-800 hover:bg-dark-700 rounded-xl border border-white/10 transition-all" title="Center on me">
                     <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/>
                         <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
@@ -559,42 +575,19 @@
         <span id="toastMessage">Notification</span>
     </div>
 
-    <!-- PART 2 & 3 SCRIPTS WILL GO HERE -->
-
     <script>
-    // Global callback for Mappls SDK initialization
     window.initMap1 = function() {
-        console.log('Mappls SDK callback triggered');
+        console.log('Mappls SDK ready');
         window.mapplsSDKReady = true;
     };
-</script>
+    </script>
 
-        <!-- Firebase SDK -->
+    <!-- Firebase SDK -->
     <script type="module">
-        // ================================
-        // FIREBASE IMPORTS & INITIALIZATION
-        // ================================
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
-        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { 
-            getFirestore, 
-            doc, 
-            getDoc, 
-            setDoc, 
-            updateDoc, 
-            collection, 
-            query, 
-            orderBy, 
-            limit, 
-            onSnapshot,
-            increment 
-        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, orderBy, onSnapshot, increment } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAqIobLBC_cfW_hfw5P073Go_dW7MbLR6s",
             authDomain: "territory-run-e7df3.firebaseapp.com",
@@ -604,12 +597,10 @@
             appId: "1:733520135692:web:74923175464454eb7cd029"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Make Firebase available globally
         window.firebaseAuth = auth;
         window.firebaseDb = db;
         window.firebaseDoc = doc;
@@ -626,581 +617,268 @@
         window.mapInstance = null;
         window.userMarker = null;
         window.safeZoneCircle = null;
+        window.trailPath = []; // Array of LatLng for polyline
         window.trailPolyline = null;
+        window.startMarker = null;
         window.capturedPolygons = [];
-        // Add these to existing global state variables
-window.lastSafeZoneUpdate = null;
-window.lastSafeZonePosition = null;
-// Add to existing global state
-window.allSafeZoneCircles = []; // Track ALL circles
-window.lastSafeZoneUpdate = null;
-window.lastSafeZonePosition = null;
-window.allSafeZoneCircles = [];
-window.safeZoneTimeout = null; // NEW - for debouncing
 
         // Run State
         window.isRunning = false;
-        window.runPath = [];
+        window.runPath = []; // Array of {lat, lng, timestamp}
         window.runStartTime = null;
         window.runTimer = null;
-        window.watchId = null;
+        window.gpsWatchId = null;
         window.currentPosition = null;
+        window.canCloseLoop = false;
+        window.followMode = true; // Auto-center on user
+
+        // Speed tracking
+        window.lastPositionTime = null;
+        window.lastPosition = null;
+        window.currentSpeed = 0;
 
         // Game Constants
-        window.SAFE_ZONE_RADIUS = 20; // meters
-        window.LOOP_CLOSURE_THRESHOLD = 15; // meters
-        window.MIN_CAPTURE_AREA = 100; // square meters
+        window.SAFE_ZONE_RADIUS = 20;
+        window.LOOP_CLOSURE_THRESHOLD = 25;
+        window.MIN_CAPTURE_AREA = 50;
         window.COINS_PER_100_SQM = 1;
         window.BONUS_COINS_PER_RUN = 10;
+        window.MIN_PATH_POINTS = 5;
+        window.MIN_POINT_DISTANCE = 3; // Minimum meters between recorded points
 
         // ================================
-        // AUTHENTICATION STATE HANDLER
+        // AUTHENTICATION
         // ================================
-        // ================================
-// AUTHENTICATION STATE HANDLER
-// ================================
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        console.log('User authenticated:', user.uid);
-        window.currentUser = user;
-        
-        // Load user data from Firestore
-        await loadUserData(user);
-        
-        // Initialize the map
-        initializeMap();
-        
-        // Setup leaderboard listener
-        setupLeaderboardListener();
-        
-        // Start GPS tracking
-        startGPSTracking();
-        
-        // Hide loading overlay
-        setTimeout(() => {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-        }, 500);
-        
-    } else {
-        // Not authenticated, redirect to login immediately
-        console.log('User not authenticated, redirecting to login...');
-        
-        // Show message before redirect
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        loadingOverlay.querySelector('p').textContent = 'Not authenticated. Redirecting to login...';
-        
-        // Redirect after short delay
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 1000);
-    }
-});
-
-        // ================================
-        // LOAD USER DATA
-        // ================================
-        async function loadUserData(user) {
-    try {
-        const userDocRef = doc(db, 'users', user.uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-            window.userData = userDocSnap.data();
-            
-            // MIGRATION: Add missing fields if they don't exist
-            if (window.userData.totalArea === undefined || window.userData.coins === undefined) {
-                await updateDoc(userDocRef, {
-                    totalArea: window.userData.totalArea || 0,
-                    coins: window.userData.coins || 0
-                });
-                window.userData.totalArea = window.userData.totalArea || 0;
-                window.userData.coins = window.userData.coins || 0;
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                console.log('User authenticated:', user.uid);
+                window.currentUser = user;
+                await loadUserData(user);
+                initializeMap();
+                setupLeaderboardListener();
+                startGPSTracking();
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').classList.add('hidden');
+                }, 500);
+            } else {
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                loadingOverlay.querySelector('p').textContent = 'Redirecting to login...';
+                setTimeout(() => { window.location.href = 'login.html'; }, 1000);
             }
-        } else {
-            // Create default user data if doesn't exist
-            const defaultData = {
-                gamertag: user.displayName || 'Runner' + user.uid.substring(0, 6),
-                email: user.email || user.phoneNumber || 'Unknown',
-                avatarUrl: user.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user.uid}`,
-                coins: 0,                    // ADD THIS
-                totalArea: 0,                // ADD THIS
-                territoriesCaptured: 0,
-                level: 1,                    // OPTIONAL: Add level
-                xp: 0,                       // OPTIONAL: Add XP
-                createdAt: new Date().toISOString(),
-                lastActive: new Date().toISOString()
-            };
-            
-            await setDoc(userDocRef, defaultData);
-            window.userData = defaultData;
+        });
+
+        async function loadUserData(user) {
+            try {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    window.userData = userDocSnap.data();
+                    if (window.userData.totalArea === undefined) {
+                        await updateDoc(userDocRef, { totalArea: 0, coins: 0 });
+                        window.userData.totalArea = 0;
+                        window.userData.coins = 0;
+                    }
+                } else {
+                    const defaultData = {
+                        gamertag: user.displayName || 'Runner' + user.uid.substring(0, 6),
+                        email: user.email || user.phoneNumber || 'Unknown',
+                        avatarUrl: user.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user.uid}`,
+                        coins: 0,
+                        totalArea: 0,
+                        territoriesCaptured: 0,
+                        createdAt: new Date().toISOString(),
+                        lastActive: new Date().toISOString()
+                    };
+                    await setDoc(userDocRef, defaultData);
+                    window.userData = defaultData;
+                }
+                updateUserUI();
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showToast('Failed to load user data', 'error');
+            }
         }
 
-        // Update UI with user data
-        updateUserUI();
-        
-    } catch (error) {
-        console.error('Error loading user data:', error);
-        showToast('Failed to load user data', 'error');
-    }
-}
-
-        // ================================
-        // UPDATE USER UI
-        // ================================
         window.updateUserUI = function() {
             if (!window.userData) return;
-
-            // Profile section
             document.getElementById('userAvatar').src = window.userData.avatarUrl || 
                 `https://api.dicebear.com/9.x/avataaars/svg?seed=${window.currentUser.uid}`;
             document.getElementById('userGamertag').textContent = window.userData.gamertag || 'Runner';
             document.getElementById('userEmail').textContent = window.userData.email || '';
-            
-            // Stats
             document.getElementById('userCoins').textContent = formatNumber(window.userData.coins || 0);
             document.getElementById('userArea').innerHTML = `${formatNumber(Math.round(window.userData.totalArea || 0))}<span class="text-sm font-normal text-gray-400"> m²</span>`;
         };
 
-        // ================================
-        // LEADERBOARD REAL-TIME LISTENER
-        // ================================
         function setupLeaderboardListener() {
-    const usersRef = collection(db, 'users');
-    
-    // Query all users and sort by totalArea (defaults to 0 if missing)
-    const leaderboardQuery = query(usersRef, orderBy('createdAt', 'desc'));
+            const usersRef = collection(db, 'users');
+            const leaderboardQuery = query(usersRef, orderBy('createdAt', 'desc'));
 
-    onSnapshot(leaderboardQuery, (snapshot) => {
-        const leaderboardContainer = document.getElementById('leaderboard');
-        leaderboardContainer.innerHTML = '';
+            onSnapshot(leaderboardQuery, (snapshot) => {
+                const container = document.getElementById('leaderboard');
+                container.innerHTML = '';
 
-        if (snapshot.empty) {
-            leaderboardContainer.innerHTML = `
-                <div class="text-center py-8 text-gray-500">
-                    <p class="text-sm">No players yet. Be the first!</p>
-                </div>
-            `;
-            return;
+                if (snapshot.empty) {
+                    container.innerHTML = `<div class="text-center py-8 text-gray-500"><p class="text-sm">No players yet!</p></div>`;
+                    return;
+                }
+
+                const users = [];
+                snapshot.forEach((doc) => {
+                    users.push({ id: doc.id, ...doc.data(), totalArea: doc.data().totalArea || 0 });
+                });
+
+                users.sort((a, b) => b.totalArea - a.totalArea);
+                users.slice(0, 10).forEach((data, index) => {
+                    container.innerHTML += createLeaderboardEntry(index + 1, data, data.id === window.currentUser?.uid);
+                });
+            });
         }
 
-        // Get all users and sort manually by totalArea
-        const users = [];
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            users.push({
-                id: doc.id,
-                ...data,
-                totalArea: data.totalArea || 0,  // Default to 0 if missing
-                coins: data.coins || 0            // Default to 0 if missing
-            });
-        });
-
-        // Sort by totalArea descending
-        users.sort((a, b) => b.totalArea - a.totalArea);
-
-        // Take top 10
-        const top10 = users.slice(0, 10);
-
-        let rank = 1;
-        top10.forEach((data) => {
-            const isCurrentUser = data.id === window.currentUser?.uid;
-            const entryHTML = createLeaderboardEntry(rank, data, isCurrentUser);
-            leaderboardContainer.innerHTML += entryHTML;
-            rank++;
-        });
-    }, (error) => {
-        console.error('Leaderboard error:', error);
-        document.getElementById('leaderboard').innerHTML = `
-            <div class="text-center py-8 text-red-400">
-                <p class="text-sm">Failed to load leaderboard</p>
-            </div>
-        `;
-    });
-}
-
-        // ================================
-        // CREATE LEADERBOARD ENTRY HTML
-        // ================================
         function createLeaderboardEntry(rank, data, isCurrentUser) {
-            let rankBadgeClass = 'bg-dark-700 text-gray-400';
-            let rankIcon = '';
-            
-            if (rank === 1) {
-                rankBadgeClass = 'rank-1 text-dark-950';
-                rankIcon = `<svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`;
-            } else if (rank === 2) {
-                rankBadgeClass = 'rank-2 text-dark-950';
-            } else if (rank === 3) {
-                rankBadgeClass = 'rank-3 text-white';
-            }
+            let rankClass = 'bg-dark-700 text-gray-400';
+            if (rank === 1) rankClass = 'rank-1 text-dark-950';
+            else if (rank === 2) rankClass = 'rank-2 text-dark-950';
+            else if (rank === 3) rankClass = 'rank-3 text-white';
 
-            const avatarUrl = data.avatarUrl || `https://api.dicebear.com/9.x/avataaars/svg?seed=${data.gamertag}`;
-            const area = Math.round(data.totalArea || 0);
-            
             return `
-                <div class="leaderboard-entry flex items-center space-x-3 p-3 rounded-xl ${isCurrentUser ? 'bg-primary/10 border border-primary/20' : 'hover:bg-white/5'} cursor-pointer transition-all">
-                    <div class="w-7 h-7 rounded-full ${rankBadgeClass} flex items-center justify-center text-xs font-bold flex-shrink-0">
-                        ${rankIcon || rank}
-                    </div>
-                    <img src="${avatarUrl}" alt="${data.gamertag}" class="w-9 h-9 rounded-full object-cover bg-dark-700 flex-shrink-0">
+                <div class="leaderboard-entry flex items-center space-x-3 p-3 rounded-xl ${isCurrentUser ? 'bg-primary/10 border border-primary/20' : 'hover:bg-white/5'}">
+                    <div class="w-7 h-7 rounded-full ${rankClass} flex items-center justify-center text-xs font-bold">${rank}</div>
+                    <img src="${data.avatarUrl || `https://api.dicebear.com/9.x/avataaars/svg?seed=${data.gamertag}`}" class="w-9 h-9 rounded-full bg-dark-700">
                     <div class="flex-1 min-w-0">
                         <p class="font-medium text-sm truncate ${isCurrentUser ? 'text-primary' : 'text-white'}">${data.gamertag || 'Unknown'}</p>
-                        <p class="text-xs text-gray-500">${formatNumber(area)} m²</p>
+                        <p class="text-xs text-gray-500">${formatNumber(Math.round(data.totalArea))} m²</p>
                     </div>
                     ${isCurrentUser ? '<span class="text-xs text-primary font-medium">YOU</span>' : ''}
                 </div>
             `;
         }
 
-        // ================================
-        // LOGOUT FUNCTION
-        // ================================
         window.logout = async function() {
-            try {
-                // Stop any active run
-                if (window.isRunning) {
-                    stopRun(true); // Force stop without saving
-                }
-                
-                // Stop GPS tracking
-                if (window.watchId) {
-                    navigator.geolocation.clearWatch(window.watchId);
-                }
-                
-                await signOut(auth);
-                window.location.href = 'login.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-                showToast('Failed to logout', 'error');
-            }
+            if (window.isRunning) stopRun(true);
+            if (window.gpsWatchId) navigator.geolocation.clearWatch(window.gpsWatchId);
+            await signOut(auth);
+            window.location.href = 'login.html';
         };
 
-        // ================================
-        // UPDATE USER STATS IN FIRESTORE
-        // ================================
         window.updateUserStats = async function(areaGained, coinsGained) {
             if (!window.currentUser) return;
-
             try {
                 const userDocRef = doc(db, 'users', window.currentUser.uid);
-                
                 await updateDoc(userDocRef, {
                     totalArea: increment(areaGained),
                     coins: increment(coinsGained),
                     territoriesCaptured: increment(1),
                     lastActive: new Date().toISOString()
                 });
-
-                // Update local state
                 window.userData.totalArea = (window.userData.totalArea || 0) + areaGained;
                 window.userData.coins = (window.userData.coins || 0) + coinsGained;
-                window.userData.territoriesCaptured = (window.userData.territoriesCaptured || 0) + 1;
-
-                // Update UI
                 updateUserUI();
-                
-                console.log(`Stats updated: +${areaGained} m², +${coinsGained} coins`);
-                
             } catch (error) {
                 console.error('Error updating stats:', error);
-                showToast('Failed to save progress', 'error');
             }
         };
     </script>
 
-    <!-- UI HELPER FUNCTIONS -->
+    <!-- HELPER FUNCTIONS -->
     <script>
-        // ================================
-        // TOAST NOTIFICATION SYSTEM
-        // ================================
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toastMessage');
             const toastIcon = document.getElementById('toastIcon');
 
-            // Remove existing classes
             toast.classList.remove('success', 'error', 'warning');
+            let iconPath = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>';
             
-            // Set icon and class based on type
-            let iconPath = '';
-            switch (type) {
-                case 'success':
-                    toast.classList.add('success');
-                    iconPath = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
-                    toastIcon.style.color = '#10B981';
-                    break;
-                case 'error':
-                    toast.classList.add('error');
-                    iconPath = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
-                    toastIcon.style.color = '#EF4444';
-                    break;
-                case 'warning':
-                    toast.classList.add('warning');
-                    iconPath = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
-                    toastIcon.style.color = '#F59E0B';
-                    break;
-                default:
-                    iconPath = '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>';
-                    toastIcon.style.color = '#3B82F6';
+            if (type === 'success') {
+                toast.classList.add('success');
+                iconPath = '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>';
+                toastIcon.style.color = '#10B981';
+            } else if (type === 'error') {
+                toast.classList.add('error');
+                iconPath = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
+                toastIcon.style.color = '#EF4444';
+            } else if (type === 'warning') {
+                toast.classList.add('warning');
+                iconPath = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
+                toastIcon.style.color = '#F59E0B';
             }
 
             toastIcon.innerHTML = iconPath;
             toastMessage.textContent = message;
-            
-            // Show toast
             toast.classList.add('show');
-
-            // Hide after 4 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
+            setTimeout(() => { toast.classList.remove('show'); }, 4000);
         }
-
-        // Make showToast globally accessible
         window.showToast = showToast;
 
-        // ================================
-        // SIDEBAR TOGGLE (MOBILE)
-        // ================================
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-            overlay.classList.toggle('hidden');
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('hidden');
         }
-
         window.toggleSidebar = toggleSidebar;
 
-        // ================================
-        // DISMISS SAFETY WARNING
-        // ================================
         function dismissWarning() {
             const warning = document.getElementById('safetyWarning');
-            warning.style.opacity = '0';
-            warning.style.transform = 'translateX(-50%) translateY(-20px)';
-            setTimeout(() => {
-                warning.style.display = 'none';
-            }, 300);
-            
-            // Save preference
+            warning.style.display = 'none';
             localStorage.setItem('safetyWarningDismissed', 'true');
         }
-
         window.dismissWarning = dismissWarning;
 
-        // Check if warning was previously dismissed
         if (localStorage.getItem('safetyWarningDismissed') === 'true') {
             document.getElementById('safetyWarning').style.display = 'none';
         }
 
-        // ================================
-        // NUMBER FORMATTING
-        // ================================
         function formatNumber(num) {
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            } else if (num >= 1000) {
-                return (num / 1000).toFixed(1) + 'K';
-            }
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toString();
         }
-
         window.formatNumber = formatNumber;
 
-        // ================================
-        // TIME FORMATTING
-        // ================================
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
-
         window.formatTime = formatTime;
 
-        // ================================
-        // DISTANCE CALCULATION (HAVERSINE)
-        // ================================
+        function toRad(deg) { return deg * (Math.PI / 180); }
+
         function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371000; // Earth's radius in meters
+            const R = 6371000;
             const dLat = toRad(lat2 - lat1);
             const dLon = toRad(lon2 - lon1);
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
+            const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         }
-
-        function toRad(deg) {
-            return deg * (Math.PI / 180);
-        }
-
         window.calculateDistance = calculateDistance;
 
-        // ================================
-        // POLYGON AREA CALCULATION (SHOELACE)
-        // ================================
-        function calculatePolygonArea(coordinates) {
-            if (coordinates.length < 3) return 0;
-
+        function calculatePolygonArea(coords) {
+            if (coords.length < 3) return 0;
             let area = 0;
-            const n = coordinates.length;
-
-            for (let i = 0; i < n; i++) {
-                const j = (i + 1) % n;
-                
-                // Convert lat/lng to approximate meters (at equator)
-                const xi = coordinates[i].lng * 111320 * Math.cos(toRad(coordinates[i].lat));
-                const yi = coordinates[i].lat * 110540;
-                const xj = coordinates[j].lng * 111320 * Math.cos(toRad(coordinates[j].lat));
-                const yj = coordinates[j].lat * 110540;
-                
-                area += xi * yj;
-                area -= xj * yi;
+            for (let i = 0; i < coords.length; i++) {
+                const j = (i + 1) % coords.length;
+                const xi = coords[i].lng * 111320 * Math.cos(toRad(coords[i].lat));
+                const yi = coords[i].lat * 110540;
+                const xj = coords[j].lng * 111320 * Math.cos(toRad(coords[j].lat));
+                const yj = coords[j].lat * 110540;
+                area += xi * yj - xj * yi;
             }
-
             return Math.abs(area / 2);
         }
-
         window.calculatePolygonArea = calculatePolygonArea;
 
-        // ================================
-        // CALCULATE TOTAL PATH DISTANCE
-        // ================================
         function calculatePathDistance(path) {
             if (path.length < 2) return 0;
-            
-            let totalDistance = 0;
+            let total = 0;
             for (let i = 1; i < path.length; i++) {
-                totalDistance += calculateDistance(
-                    path[i - 1].lat, path[i - 1].lng,
-                    path[i].lat, path[i].lng
-                );
+                total += calculateDistance(path[i-1].lat, path[i-1].lng, path[i].lat, path[i].lng);
             }
-            return totalDistance;
+            return total;
         }
-
         window.calculatePathDistance = calculatePathDistance;
 
-        // ================================
-        // CHECK IF POINT IS INSIDE POLYGON
-        // ================================
-        function isPointInPolygon(point, polygon) {
-            let inside = false;
-            const n = polygon.length;
-            
-            for (let i = 0, j = n - 1; i < n; j = i++) {
-                const xi = polygon[i].lng, yi = polygon[i].lat;
-                const xj = polygon[j].lng, yj = polygon[j].lat;
-                
-                if (((yi > point.lat) !== (yj > point.lat)) &&
-                    (point.lng < (xj - xi) * (point.lat - yi) / (yj - yi) + xi)) {
-                    inside = !inside;
-                }
-            }
-            
-            return inside;
-        }
-
-        window.isPointInPolygon = isPointInPolygon;
-
-        // ================================
-        // UPDATE RUN TIMER
-        // ================================
-        function updateRunTimer() {
-            if (!window.runStartTime) return;
-            
-            const elapsed = (Date.now() - window.runStartTime) / 1000;
-            document.getElementById('runDuration').textContent = formatTime(elapsed);
-        }
-
-        window.updateRunTimer = updateRunTimer;
-
-        // ================================
-        // UPDATE RUN STATS DISPLAY
-        // ================================
-        function updateRunStatsDisplay() {
-            if (!window.isRunning || window.runPath.length < 2) return;
-
-            // Calculate distance
-            const distance = calculatePathDistance(window.runPath);
-            document.getElementById('runDistance').innerHTML = `${Math.round(distance)} <span class="text-sm font-normal text-gray-400">m</span>`;
-
-            // Calculate potential area (if loop were closed now)
-            if (window.runPath.length >= 3) {
-                const potentialArea = calculatePolygonArea(window.runPath);
-                document.getElementById('runPotentialArea').innerHTML = `${Math.round(potentialArea)} <span class="text-sm font-normal text-gray-400">m²</span>`;
-            }
-
-            // Calculate distance to starting point
-            const startPoint = window.runPath[0];
-            const currentPoint = window.runPath[window.runPath.length - 1];
-            const distanceToStart = calculateDistance(
-                startPoint.lat, startPoint.lng,
-                currentPoint.lat, currentPoint.lng
-            );
-
-            // Show loop progress if close enough
-            const loopProgress = document.getElementById('loopProgress');
-            if (window.runPath.length >= 3 && distanceToStart < 100) {
-                loopProgress.classList.remove('hidden');
-                
-                const progressPercent = Math.max(0, Math.min(100, (1 - distanceToStart / 100) * 100));
-                document.getElementById('loopProgressBar').style.width = progressPercent + '%';
-                document.getElementById('loopDistanceText').textContent = `${Math.round(distanceToStart)} m remaining`;
-                
-                // Change color based on closeness
-                const progressBar = document.getElementById('loopProgressBar');
-                if (distanceToStart <= window.LOOP_CLOSURE_THRESHOLD) {
-                    progressBar.classList.remove('bg-primary');
-                    progressBar.classList.add('bg-green-400');
-                } else {
-                    progressBar.classList.remove('bg-green-400');
-                    progressBar.classList.add('bg-primary');
-                }
-            } else {
-                loopProgress.classList.add('hidden');
-            }
-        }
-
-        window.updateRunStatsDisplay = updateRunStatsDisplay;
-
-        // ================================
-        // SET RUN STATUS BADGE
-        // ================================
-        function setRunStatus(status) {
-            const badge = document.getElementById('runStatusBadge');
-            badge.classList.remove('status-idle', 'status-running', 'status-danger');
-            
-            switch (status) {
-                case 'running':
-                    badge.classList.add('status-running');
-                    badge.innerHTML = `
-                        <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                        Running
-                    `;
-                    break;
-                case 'danger':
-                    badge.classList.add('status-danger');
-                    badge.innerHTML = `
-                        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                        Exposed!
-                    `;
-                    break;
-                default:
-                    badge.classList.add('status-idle');
-                    badge.textContent = 'Idle';
-            }
-        }
-
-        window.setRunStatus = setRunStatus;
-
-        // ================================
-        // GPS STATUS UPDATE
-        // ================================
         function updateGPSStatus(status, message) {
             const indicator = document.getElementById('gpsIndicator');
             const pulse = document.getElementById('gpsPulse');
@@ -1208,784 +886,572 @@ onAuthStateChanged(auth, async (user) => {
             
             indicator.classList.remove('bg-gray-500', 'bg-primary', 'bg-red-500', 'bg-yellow-500');
             
-            switch (status) {
-                case 'active':
-                    indicator.classList.add('bg-primary');
-                    pulse.classList.remove('hidden');
-                    break;
-                case 'error':
-                    indicator.classList.add('bg-red-500');
-                    pulse.classList.add('hidden');
-                    break;
-                case 'warning':
-                    indicator.classList.add('bg-yellow-500');
-                    pulse.classList.add('hidden');
-                    break;
-                default:
-                    indicator.classList.add('bg-gray-500');
-                    pulse.classList.add('hidden');
+            if (status === 'active') {
+                indicator.classList.add('bg-primary');
+                pulse.classList.remove('hidden');
+            } else if (status === 'error') {
+                indicator.classList.add('bg-red-500');
+                pulse.classList.add('hidden');
+            } else {
+                indicator.classList.add('bg-gray-500');
+                pulse.classList.add('hidden');
             }
-            
             text.textContent = message;
         }
-
         window.updateGPSStatus = updateGPSStatus;
-
-        // ================================
-        // ENABLE/DISABLE RUN BUTTONS
-        // ================================
-        function setRunButtonsState(canStart) {
-            const startBtn = document.getElementById('startRunBtn');
-            startBtn.disabled = !canStart;
-        }
-
-        window.setRunButtonsState = setRunButtonsState;
     </script>
 
-        <!-- MAP & GAME LOGIC -->
+    <!-- MAIN MAP & GAME LOGIC -->
     <script>
         // ================================
-        // MAPPLS MAP INITIALIZATION
+        // MAP INITIALIZATION
         // ================================
         function initializeMap() {
-    // Wait for Mappls SDK to be ready
-    if (typeof mappls === 'undefined' || !window.mapplsSDKReady) {
-        console.log('Waiting for Mappls SDK...');
-        setTimeout(initializeMap, 500); // Retry after 500ms
-        return;
-    }
-
-    try {
-        console.log('Initializing Mappls map...');
-        
-        // Create map instance directly (v3.0 doesn't need initialize function)
-        window.mapInstance = new mappls.Map('map', {
-            center: [28.6139, 77.2090],
-            zoom: 16,
-            zoomControl: true,
-            location: true
-        });
-
-        window.mapInstance.on('load', () => {
-            console.log('Mappls map loaded successfully');
-            
-            if (window.currentPosition) {
-                centerOnUser();
+            if (typeof mappls === 'undefined' || !window.mapplsSDKReady) {
+                console.log('Waiting for Mappls SDK...');
+                setTimeout(initializeMap, 300);
+                return;
             }
-        });
 
-    } catch (error) {
-        console.error('Failed to initialize Mappls map:', error);
-        console.log('Falling back to canvas map');
-        initializeFallbackMap();
-    }
-}
+            try {
+                window.mapInstance = new mappls.Map('map', {
+                    center: [28.6139, 77.2090],
+                    zoom: 18,
+                    zoomControl: true,
+                    location: true
+                });
 
+                window.mapInstance.on('load', () => {
+                    console.log('✅ Map loaded');
+                    if (window.currentPosition) {
+                        centerOnUser();
+                        showSafeZone(window.currentPosition.lat, window.currentPosition.lng);
+                    }
+                });
+            } catch (error) {
+                console.error('Map init error:', error);
+            }
+        }
         window.initializeMap = initializeMap;
 
         // ================================
-        // FALLBACK CANVAS MAP (if Mappls fails)
-        // ================================
-        function initializeFallbackMap() {
-            console.log('Initializing fallback canvas map...');
-            
-            const mapContainer = document.getElementById('map');
-            mapContainer.innerHTML = `
-                <canvas id="fallbackCanvas" style="width: 100%; height: 100%;"></canvas>
-                <div style="position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(10,10,15,0.9); padding: 12px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                    <p style="color: #9CA3AF; font-size: 13px; text-align: center;">
-                        <span style="color: #F59E0B;">⚠</span> Map tiles unavailable. Using simplified view.
-                    </p>
-                </div>
-            `;
-
-            const canvas = document.getElementById('fallbackCanvas');
-            const ctx = canvas.getContext('2d');
-
-            function resizeCanvas() {
-                canvas.width = mapContainer.clientWidth;
-                canvas.height = mapContainer.clientHeight;
-                drawFallbackMap();
-            }
-
-            function drawFallbackMap() {
-                // Dark background
-                ctx.fillStyle = '#0a0a0f';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                // Draw grid
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-                ctx.lineWidth = 1;
-                const gridSize = 50;
-
-                for (let x = 0; x <= canvas.width; x += gridSize) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, 0);
-                    ctx.lineTo(x, canvas.height);
-                    ctx.stroke();
-                }
-
-                for (let y = 0; y <= canvas.height; y += gridSize) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, y);
-                    ctx.lineTo(canvas.width, y);
-                    ctx.stroke();
-                }
-
-                // Draw user position if available
-                if (window.currentPosition) {
-                    const centerX = canvas.width / 2;
-                    const centerY = canvas.height / 2;
-
-                    // Safe zone circle
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, 60, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
-                    ctx.fill();
-                    ctx.strokeStyle = 'rgba(16, 185, 129, 0.5)';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-
-                    // User dot
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
-                    ctx.fillStyle = '#10B981';
-                    ctx.fill();
-
-                    // Pulse effect
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, 16, 0, Math.PI * 2);
-                    ctx.strokeStyle = 'rgba(16, 185, 129, 0.3)';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-
-                    // Draw trail if running
-                    if (window.isRunning && window.runPath.length > 1) {
-                        drawTrailOnCanvas(ctx, centerX, centerY);
-                    }
-                }
-            }
-
-            function drawTrailOnCanvas(ctx, centerX, centerY) {
-                if (window.runPath.length < 2) return;
-
-                const scale = 2; // meters to pixels
-                const startLat = window.runPath[0].lat;
-                const startLng = window.runPath[0].lng;
-
-                ctx.beginPath();
-                ctx.strokeStyle = '#10B981';
-                ctx.lineWidth = 3;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-
-                window.runPath.forEach((point, index) => {
-                    const dx = (point.lng - startLng) * 111320 * Math.cos(startLat * Math.PI / 180) * scale;
-                    const dy = (startLat - point.lat) * 110540 * scale;
-                    const x = centerX + dx;
-                    const y = centerY + dy;
-
-                    if (index === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                });
-
-                ctx.stroke();
-
-                // Draw start point
-                const startX = centerX;
-                const startY = centerY;
-                ctx.beginPath();
-                ctx.arc(startX, startY, 6, 0, Math.PI * 2);
-                ctx.fillStyle = '#F59E0B';
-                ctx.fill();
-            }
-
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
-            // Store reference to redraw function
-            window.redrawFallbackMap = drawFallbackMap;
-
-            // Redraw periodically during run
-            setInterval(() => {
-                if (window.isRunning) {
-                    drawFallbackMap();
-                }
-            }, 500);
-        }
-
-        // ================================
-        // GPS TRACKING
+        // GPS TRACKING - THE CORE
         // ================================
         function startGPSTracking() {
             if (!navigator.geolocation) {
-                updateGPSStatus('error', 'Geolocation not supported');
-                showToast('Your browser does not support GPS tracking', 'error');
+                updateGPSStatus('error', 'GPS not supported');
+                showToast('GPS not supported on this device', 'error');
                 return;
             }
 
             updateGPSStatus('warning', 'Acquiring GPS...');
 
-            const options = {
+            const gpsOptions = {
                 enableHighAccuracy: true,
                 timeout: 10000,
                 maximumAge: 0
             };
 
-            // Get initial position
+            // Initial position
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    handlePositionUpdate(position);
-                    setRunButtonsState(true);
+                (pos) => {
+                    onGPSUpdate(pos);
+                    document.getElementById('startRunBtn').disabled = false;
                 },
-                (error) => {
-                    handleGPSError(error);
+                (err) => {
+                    console.error('Initial GPS error:', err);
+                    updateGPSStatus('error', 'GPS failed');
                 },
-                options
+                gpsOptions
             );
 
-            // Watch for continuous updates
-            window.watchId = navigator.geolocation.watchPosition(
-                handlePositionUpdate,
-                handleGPSError,
-                options
+            // Continuous tracking
+            window.gpsWatchId = navigator.geolocation.watchPosition(
+                onGPSUpdate,
+                (err) => {
+                    console.error('GPS watch error:', err);
+                    updateGPSStatus('error', 'GPS signal lost');
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                }
             );
+
+            console.log('🛰️ GPS tracking started');
         }
-
         window.startGPSTracking = startGPSTracking;
 
         // ================================
-        // HANDLE POSITION UPDATE
+        // GPS UPDATE HANDLER - CALLED EVERY GPS TICK
         // ================================
-        function handlePositionUpdate(position) {
-            const { latitude, longitude, accuracy } = position.coords;
-            
-            window.currentPosition = {
-                lat: latitude,
-                lng: longitude,
-                accuracy: accuracy
-            };
+        function onGPSUpdate(position) {
+            const { latitude: lat, longitude: lng, accuracy, speed } = position.coords;
+            const now = Date.now();
 
-            updateGPSStatus('active', `GPS Active (±${Math.round(accuracy)}m)`);
-            setRunButtonsState(true);
+            // Calculate speed if GPS doesn't provide it
+            if (window.lastPosition && window.lastPositionTime) {
+                const dist = calculateDistance(window.lastPosition.lat, window.lastPosition.lng, lat, lng);
+                const timeDiff = (now - window.lastPositionTime) / 1000;
+                if (timeDiff > 0) {
+                    window.currentSpeed = (dist / timeDiff) * 3.6; // km/h
+                }
+            }
 
-            // Update map view
-            updateMapPosition(latitude, longitude);
+            // Store previous for speed calc
+            window.lastPosition = { lat, lng };
+            window.lastPositionTime = now;
 
-            // If running, record the path
+            // Update current position
+            window.currentPosition = { lat, lng, accuracy, timestamp: now };
+
+            // Update GPS status
+            updateGPSStatus('active', `GPS ±${Math.round(accuracy)}m`);
+            document.getElementById('startRunBtn').disabled = false;
+
+            // === ALWAYS UPDATE USER MARKER (LIVE TRACKING) ===
+            updateUserMarker(lat, lng);
+
+            // === IF RUNNING, RECORD THE PATH ===
             if (window.isRunning) {
-                recordPathPoint(latitude, longitude);
+                recordPathPoint(lat, lng);
+                updateLiveStats();
+            } else {
+                // Update safe zone when idle
+                showSafeZone(lat, lng);
+            }
+
+            // Auto-follow if enabled
+            if (window.followMode && window.mapInstance) {
+                window.mapInstance.panTo([lng, lat]);
             }
         }
 
         // ================================
-        // HANDLE GPS ERROR
+        // UPDATE USER MARKER ON MAP
         // ================================
-        function handleGPSError(error) {
-            let message = 'GPS Error';
-            
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    message = 'Location access denied';
-                    showToast('Please enable location access to play', 'error');
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    message = 'Location unavailable';
-                    break;
-                case error.TIMEOUT:
-                    message = 'GPS timeout';
-                    break;
-            }
+        function updateUserMarker(lat, lng) {
+            if (!window.mapInstance) return;
 
-            updateGPSStatus('error', message);
-            setRunButtonsState(false);
-            console.error('GPS Error:', error);
-        }
-
-        // ================================
-        // UPDATE MAP POSITION
-        // ================================
-        function updateMapPosition(lat, lng) {
-    if (window.mapInstance && typeof mappls !== 'undefined') {
-        // Update or create user marker
-        if (window.userMarker) {
-            window.userMarker.setPosition(new mappls.LatLng(lat, lng));
-        } else {
-            const markerDiv = document.createElement('div');
-            markerDiv.innerHTML = `
-                <div style="position: relative; width: 24px; height: 24px;">
-                    <div style="width: 16px; height: 16px; background: #10B981; border: 3px solid white; border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.4); position: absolute; top: 4px; left: 4px;"></div>
-                    <div style="position: absolute; inset: 0; border: 2px solid rgba(16, 185, 129, 0.5); border-radius: 50%; animation: pulse-ring 1.5s ease-out infinite;"></div>
-                </div>
-            `;
-
-            window.userMarker = new mappls.Marker({
-                map: window.mapInstance,
-                position: new mappls.LatLng(lat, lng),
-                icon: markerDiv,
-                fitbounds: false
-            });
-        }
-
-        // Only update safe zone if not running
-        const SAFEZONE_MOVE_THRESHOLD = 40; // meters
-
-if (!window.isRunning) {
-    if (!window.lastSafeZonePosition) {
-        window.lastSafeZonePosition = { lat, lng };
-        updateSafeZone(lat, lng);
-        return;
-    }
-
-    const dist = calculateDistance(
-        window.lastSafeZonePosition.lat,
-        window.lastSafeZonePosition.lng,
-        lat,
-        lng
-    );
-
-    if (dist >= SAFEZONE_MOVE_THRESHOLD) {
-        window.lastSafeZonePosition = { lat, lng };
-        updateSafeZone(lat, lng);
-    }
-}
-
-
-    } else if (window.redrawFallbackMap) {
-        window.redrawFallbackMap();
-    }
-}
-
-        // ================================
-        // UPDATE SAFE ZONE CIRCLE
-        // ================================
-       function updateSafeZone(lat, lng) {
-    if (!window.mapInstance || typeof mappls === 'undefined') return;
-
-    // REMOVE existing zone
-    if (window.safeZoneCircle) {
-        try {
-            window.safeZoneCircle.remove();
-        } catch (e) {}
-        window.safeZoneCircle = null;
-    }
-
-    // CREATE new one
-    window.safeZoneCircle = new mappls.Circle({
-        map: window.mapInstance,
-        center: new mappls.LatLng(lat, lng),
-        radius: window.SAFE_ZONE_RADIUS,
-        strokeColor: '#10B981',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#10B981',
-        fillOpacity: 0.15
-    });
-
-    console.log('Safe zone updated');
-}
-
-        // ================================
-        // CREATE CIRCLE POLYGON POINTS
-        // ================================
-        function createCirclePolygon(lat, lng, radiusMeters, points = 64) {
-            const coords = [];
-            const km = radiusMeters / 1000;
-
-            for (let i = 0; i < points; i++) {
-                const angle = (i / points) * 2 * Math.PI;
-                const dx = km * Math.cos(angle);
-                const dy = km * Math.sin(angle);
-                
-                const newLat = lat + (dy / 110.574);
-                const newLng = lng + (dx / (111.320 * Math.cos(lat * Math.PI / 180)));
-                
-                coords.push([newLng, newLat]);
-            }
-            
-            coords.push(coords[0]); // Close the polygon
-            return coords;
-        }
-
-        // ================================
-        // CENTER MAP ON USER
-        // ================================
-        function centerOnUser() {
-            if (!window.currentPosition) {
-                showToast('Waiting for GPS signal...', 'warning');
-                return;
-            }
-
-            if (window.mapInstance && typeof mappls !== 'undefined') {
-                window.mapInstance.flyTo({
-                    center: [window.currentPosition.lng, window.currentPosition.lat],
-                    zoom: 17
+            if (window.userMarker) {
+                window.userMarker.setPosition(new mappls.LatLng(lat, lng));
+            } else {
+                // Create marker with pulsing effect
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <div style="position:relative; width:24px; height:24px;">
+                        <div style="position:absolute; top:4px; left:4px; width:16px; height:16px; background:#10B981; border:3px solid white; border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>
+                        <div style="position:absolute; inset:0; border:2px solid rgba(16,185,129,0.5); border-radius:50%; animation:pulse-ring 1.5s ease-out infinite;"></div>
+                    </div>
+                `;
+                window.userMarker = new mappls.Marker({
+                    map: window.mapInstance,
+                    position: new mappls.LatLng(lat, lng),
+                    element: el,
+                    fitbounds: false
                 });
             }
         }
 
+        // ================================
+        // SHOW/HIDE SAFE ZONE
+        // ================================
+        function showSafeZone(lat, lng) {
+            if (!window.mapInstance || window.isRunning) return;
+
+            if (window.safeZoneCircle) {
+                try { window.safeZoneCircle.remove(); } catch(e) {}
+            }
+
+            window.safeZoneCircle = new mappls.Circle({
+                map: window.mapInstance,
+                center: new mappls.LatLng(lat, lng),
+                radius: window.SAFE_ZONE_RADIUS,
+                strokeColor: '#10B981',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#10B981',
+                fillOpacity: 0.15
+            });
+        }
+
+        function hideSafeZone() {
+            if (window.safeZoneCircle) {
+                try { window.safeZoneCircle.remove(); } catch(e) {}
+                window.safeZoneCircle = null;
+            }
+        }
+
+        // ================================
+        // RECORD PATH POINT DURING RUN
+        // ================================
+        function recordPathPoint(lat, lng) {
+            if (!window.isRunning) return;
+
+            // Check minimum distance from last point
+            if (window.runPath.length > 0) {
+                const last = window.runPath[window.runPath.length - 1];
+                const dist = calculateDistance(last.lat, last.lng, lat, lng);
+                if (dist < window.MIN_POINT_DISTANCE) {
+                    return; // Too close, skip
+                }
+            }
+
+            // Add new point
+            window.runPath.push({ lat, lng, timestamp: Date.now() });
+            console.log(`📍 Point ${window.runPath.length}: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+
+            // Update trail on map
+            updateTrailOnMap();
+
+            // Check if loop can be closed
+            checkLoopStatus();
+        }
+
+        // ================================
+        // UPDATE TRAIL POLYLINE ON MAP
+        // ================================
+        function updateTrailOnMap() {
+            if (!window.mapInstance || window.runPath.length < 1) return;
+
+            const pathCoords = window.runPath.map(p => [p.lng, p.lat]);
+
+            if (window.trailPolyline) {
+                try {
+                    window.trailPolyline.remove();
+                } catch(e) {}
+            }
+
+            // Create new polyline with updated path
+            window.trailPolyline = new mappls.Polyline({
+                map: window.mapInstance,
+                paths: pathCoords,
+                strokeColor: '#10B981',
+                strokeOpacity: 1,
+                strokeWeight: 5
+            });
+        }
+
+        // ================================
+        // UPDATE LIVE STATS DURING RUN
+        // ================================
+        function updateLiveStats() {
+            if (!window.isRunning) return;
+
+            const distance = calculatePathDistance(window.runPath);
+            const area = calculatePolygonArea(window.runPath);
+            const elapsed = (Date.now() - window.runStartTime) / 1000;
+
+            document.getElementById('liveDistance').textContent = `${Math.round(distance)} m`;
+            document.getElementById('liveDuration').textContent = formatTime(elapsed);
+            document.getElementById('livePoints').textContent = window.runPath.length;
+            document.getElementById('liveArea').textContent = `${Math.round(area)} m²`;
+            document.getElementById('liveSpeed').textContent = `${Math.round(window.currentSpeed)} km/h`;
+
+            // Distance to start
+            if (window.runPath.length > 0 && window.currentPosition) {
+                const start = window.runPath[0];
+                const distToStart = calculateDistance(start.lat, start.lng, 
+                    window.currentPosition.lat, window.currentPosition.lng);
+                document.getElementById('liveToStart').textContent = `${Math.round(distToStart)} m`;
+            }
+        }
+
+        // ================================
+        // CHECK IF LOOP CAN BE CLOSED
+        // ================================
+        function checkLoopStatus() {
+            if (!window.isRunning || window.runPath.length < window.MIN_PATH_POINTS) return;
+
+            const start = window.runPath[0];
+            const current = window.runPath[window.runPath.length - 1];
+            const distToStart = calculateDistance(start.lat, start.lng, current.lat, current.lng);
+
+            const progressContainer = document.getElementById('loopProgressContainer');
+            const progressBar = document.getElementById('loopProgressBar');
+            const progressText = document.getElementById('loopProgressText');
+
+            if (distToStart < 100) {
+                progressContainer.classList.remove('hidden');
+                const progress = Math.max(0, Math.min(100, (1 - distToStart / 100) * 100));
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `${Math.round(progress)}%`;
+
+                if (distToStart <= window.LOOP_CLOSURE_THRESHOLD) {
+                    if (!window.canCloseLoop) {
+                        window.canCloseLoop = true;
+                        progressBar.classList.remove('bg-primary');
+                        progressBar.classList.add('bg-green-400');
+                        
+                        document.getElementById('closeLoopBtn').classList.remove('hidden');
+                        document.getElementById('closeLoopBtn').classList.add('flex');
+                        document.getElementById('stopRunBtn').classList.add('hidden');
+                        
+                        document.getElementById('runStatusBadge').innerHTML = '<span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>Close Now!';
+                        document.getElementById('runStatusBadge').classList.remove('status-running');
+                        document.getElementById('runStatusBadge').classList.add('status-closable');
+
+                        showToast('🎯 Loop ready! Tap CAPTURE to claim territory!', 'success');
+                    }
+                } else {
+                    window.canCloseLoop = false;
+                    progressBar.classList.add('bg-primary');
+                    progressBar.classList.remove('bg-green-400');
+                    
+                    document.getElementById('closeLoopBtn').classList.add('hidden');
+                    document.getElementById('stopRunBtn').classList.remove('hidden');
+                    document.getElementById('stopRunBtn').classList.add('flex');
+                    
+                    document.getElementById('runStatusBadge').innerHTML = '<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>Running';
+                    document.getElementById('runStatusBadge').classList.add('status-running');
+                    document.getElementById('runStatusBadge').classList.remove('status-closable');
+                }
+            } else {
+                progressContainer.classList.add('hidden');
+                window.canCloseLoop = false;
+            }
+        }
+
+        // ================================
+        // CENTER ON USER
+        // ================================
+        function centerOnUser() {
+            if (!window.currentPosition || !window.mapInstance) {
+                showToast('Waiting for GPS...', 'warning');
+                return;
+            }
+            window.mapInstance.flyTo({
+                center: [window.currentPosition.lng, window.currentPosition.lat],
+                zoom: 18
+            });
+            window.followMode = true;
+            document.getElementById('followIndicator').classList.remove('hidden');
+        }
         window.centerOnUser = centerOnUser;
 
         // ================================
         // START RUN
         // ================================
         function startRun() {
-    if (!window.currentPosition) {
-        showToast('Waiting for GPS signal...', 'warning');
-        return;
-    }
-
-    if (window.isRunning) return;
-
-    console.log('Starting run...');
-    
-    // Initialize run state
-    window.isRunning = true;
-    window.runPath = [];
-    window.runStartTime = Date.now();
-
-    // Record starting position
-    window.runPath.push({
-        lat: window.currentPosition.lat,
-        lng: window.currentPosition.lng,
-        timestamp: Date.now()
-    });
-
-    // Update UI
-    document.getElementById('startRunBtn').classList.add('hidden');
-    document.getElementById('stopRunBtn').classList.remove('hidden');
-    document.getElementById('stopRunBtn').classList.add('flex');
-    document.getElementById('runStatsOverlay').classList.remove('hidden');
-    
-    setRunStatus('running');
-
-    // Hide safe zone when running - UPDATED
-    if (window.safeZoneCircle) {
-        try {
-            window.safeZoneCircle.remove();
-        } catch (e) {
-            console.warn('Error removing safe zone on start:', e);
-        }
-        window.safeZoneCircle = null;
-    }
-
-    // Remove ALL tracked circles - NEW
-    if (window.allSafeZoneCircles && window.allSafeZoneCircles.length > 0) {
-        window.allSafeZoneCircles.forEach(circle => {
-            try {
-                if (circle && typeof circle.remove === 'function') {
-                    circle.remove();
-                }
-            } catch (e) {
-                console.warn('Error removing tracked circle:', e);
+            if (!window.currentPosition) {
+                showToast('Waiting for GPS signal...', 'warning');
+                return;
             }
-        });
-        window.allSafeZoneCircles = [];
-    }
 
-    // Start run timer
-    window.runTimer = setInterval(updateRunTimer, 1000);
+            console.log('🏃 === STARTING RUN ===');
 
-    // Create trail polyline on map
-    initializeTrailOnMap();
+            window.isRunning = true;
+            window.runPath = [];
+            window.runStartTime = Date.now();
+            window.canCloseLoop = false;
+            window.followMode = true;
 
-    showToast('Run started! Create a loop to capture territory.', 'success');
-}
+            // Add starting point
+            window.runPath.push({
+                lat: window.currentPosition.lat,
+                lng: window.currentPosition.lng,
+                timestamp: Date.now()
+            });
 
+            // UI Updates
+            document.getElementById('startRunBtn').classList.add('hidden');
+            document.getElementById('stopRunBtn').classList.remove('hidden');
+            document.getElementById('stopRunBtn').classList.add('flex');
+            document.getElementById('liveStatsPanel').classList.remove('hidden');
+            document.getElementById('followIndicator').classList.remove('hidden');
+
+            // Hide safe zone
+            hideSafeZone();
+
+            // Create start marker
+            createStartMarker(window.currentPosition.lat, window.currentPosition.lng);
+
+            // Initialize trail
+            updateTrailOnMap();
+
+            // Start timer
+            window.runTimer = setInterval(() => {
+                const elapsed = (Date.now() - window.runStartTime) / 1000;
+                document.getElementById('liveDuration').textContent = formatTime(elapsed);
+            }, 1000);
+
+            // Center map
+            centerOnUser();
+
+            showToast('🏃 Run started! Create a loop to capture territory!', 'success');
+        }
         window.startRun = startRun;
 
         // ================================
-        // STOP RUN
+        // CREATE START MARKER
         // ================================
-        function stopRun(forceStop = false) {
+        function createStartMarker(lat, lng) {
+            if (!window.mapInstance) return;
+
+            if (window.startMarker) {
+                try { window.startMarker.remove(); } catch(e) {}
+            }
+
+            const el = document.createElement('div');
+            el.innerHTML = `
+                <div style="width:24px; height:24px; background:#F59E0B; border:3px solid white; border-radius:50%; box-shadow:0 2px 10px rgba(0,0,0,0.4);"></div>
+            `;
+            el.title = 'Start Point - Return here!';
+
+            window.startMarker = new mappls.Marker({
+                map: window.mapInstance,
+                position: new mappls.LatLng(lat, lng),
+                element: el,
+                fitbounds: false
+            });
+        }
+
+        // ================================
+        // STOP RUN (CANCEL)
+        // ================================
+        function stopRun(silent = false) {
             if (!window.isRunning) return;
 
-            console.log('Stopping run...');
+            console.log('❌ === STOPPING RUN ===');
 
-            // Clear timer
+            if (!silent) {
+                showToast('Run cancelled. No territory captured.', 'warning');
+            }
+
+            endRun();
+        }
+        window.stopRun = stopRun;
+
+        // ================================
+        // CLOSE LOOP (CAPTURE TERRITORY)
+        // ================================
+        function closeLoop() {
+            if (!window.isRunning || !window.canCloseLoop) {
+                showToast('Get closer to start point!', 'warning');
+                return;
+            }
+
+            console.log('✅ === CLOSING LOOP ===');
+
+            // Close the polygon
+            const start = window.runPath[0];
+            window.runPath.push({ lat: start.lat, lng: start.lng, timestamp: Date.now() });
+
+            // Calculate area
+            const capturedArea = calculatePolygonArea(window.runPath);
+            console.log('Captured area:', capturedArea);
+
+            if (capturedArea >= window.MIN_CAPTURE_AREA) {
+                const coins = Math.floor(capturedArea / 100) * window.COINS_PER_100_SQM + window.BONUS_COINS_PER_RUN;
+
+                // Draw green filled polygon
+                drawCapturedPolygon(window.runPath);
+
+                // Save to Firebase
+                window.updateUserStats(capturedArea, coins);
+
+                showToast(`🎉 Captured ${Math.round(capturedArea)} m²! +${coins} coins!`, 'success');
+            } else {
+                showToast(`Area too small (${Math.round(capturedArea)} m²). Need ${window.MIN_CAPTURE_AREA}+ m²`, 'warning');
+            }
+
+            endRun();
+        }
+        window.closeLoop = closeLoop;
+
+        // ================================
+        // END RUN (CLEANUP)
+        // ================================
+        function endRun() {
+            window.isRunning = false;
+            window.runStartTime = null;
+            window.canCloseLoop = false;
+
             if (window.runTimer) {
                 clearInterval(window.runTimer);
                 window.runTimer = null;
             }
 
-            // Check if loop can be closed
-            let captureSuccess = false;
-            let capturedArea = 0;
-            let earnedCoins = 0;
+            // UI Reset
+            document.getElementById('startRunBtn').classList.remove('hidden');
+            document.getElementById('stopRunBtn').classList.add('hidden');
+            document.getElementById('closeLoopBtn').classList.add('hidden');
+            document.getElementById('liveStatsPanel').classList.add('hidden');
+            document.getElementById('loopProgressContainer').classList.add('hidden');
+            document.getElementById('followIndicator').classList.add('hidden');
 
-            if (!forceStop && window.runPath.length >= 3) {
-                const startPoint = window.runPath[0];
-                const endPoint = window.runPath[window.runPath.length - 1];
-                const distanceToStart = calculateDistance(
-                    startPoint.lat, startPoint.lng,
-                    endPoint.lat, endPoint.lng
-                );
-
-                console.log('Distance to start:', distanceToStart, 'Threshold:', window.LOOP_CLOSURE_THRESHOLD);
-
-                if (distanceToStart <= window.LOOP_CLOSURE_THRESHOLD) {
-                    // Close the loop
-                    window.runPath.push({
-                        lat: startPoint.lat,
-                        lng: startPoint.lng,
-                        timestamp: Date.now()
-                    });
-
-                    // Calculate captured area
-                    capturedArea = calculatePolygonArea(window.runPath);
-                    console.log('Calculated area:', capturedArea);
-
-                    if (capturedArea >= window.MIN_CAPTURE_AREA) {
-                        captureSuccess = true;
-                        
-                        // Calculate coins
-                        earnedCoins = Math.floor(capturedArea / 100) * window.COINS_PER_100_SQM + window.BONUS_COINS_PER_RUN;
-                        
-                        // Save captured territory
-                        saveCapturedTerritory(window.runPath, capturedArea, earnedCoins);
-                        
-                        showToast(`Territory captured! +${Math.round(capturedArea)} m² +${earnedCoins} coins`, 'success');
-                    } else {
-                        showToast(`Area too small (${Math.round(capturedArea)} m²). Minimum: ${window.MIN_CAPTURE_AREA} m²`, 'warning');
-                    }
-                } else {
-                    showToast('Loop not closed. Get closer to your starting point!', 'warning');
-                }
-            } else if (!forceStop) {
-                showToast('Not enough points to form a territory.', 'warning');
+            // Remove start marker
+            if (window.startMarker) {
+                try { window.startMarker.remove(); } catch(e) {}
+                window.startMarker = null;
             }
 
-            // Reset run state
-            window.isRunning = false;
-            window.runStartTime = null;
-
-            // Update UI
-            document.getElementById('stopRunBtn').classList.add('hidden');
-            document.getElementById('stopRunBtn').classList.remove('flex');
-            document.getElementById('startRunBtn').classList.remove('hidden');
-            document.getElementById('runStatsOverlay').classList.add('hidden');
-            
-            setRunStatus('idle');
-
-            // Reset stats display
-            document.getElementById('runDistance').innerHTML = '0 <span class="text-sm font-normal text-gray-400">m</span>';
-            document.getElementById('runDuration').textContent = '00:00';
-            document.getElementById('runPotentialArea').innerHTML = '0 <span class="text-sm font-normal text-gray-400">m²</span>';
-            document.getElementById('loopProgress').classList.add('hidden');
-
-            // Clear trail if capture failed
-            if (!captureSuccess && window.trailPolyline) {
-                if (typeof mappls !== 'undefined') {
-                    window.trailPolyline.remove();
-                }
+            // Remove trail
+            if (window.trailPolyline) {
+                try { window.trailPolyline.remove(); } catch(e) {}
                 window.trailPolyline = null;
             }
 
-            // Clear path array
+            // Clear path
             window.runPath = [];
 
-            // Restore safe zone
+            // Show safe zone again
             if (window.currentPosition) {
-                updateSafeZone(window.currentPosition.lat, window.currentPosition.lng);
+                showSafeZone(window.currentPosition.lat, window.currentPosition.lng);
             }
         }
 
-        window.stopRun = stopRun;
-
         // ================================
-        // RECORD PATH POINT
-        // ================================
-        function recordPathPoint(lat, lng) {
-            if (!window.isRunning) return;
-
-            const newPoint = {
-                lat: lat,
-                lng: lng,
-                timestamp: Date.now()
-            };
-
-            // Only add point if it's far enough from the last point (reduces noise)
-            if (window.runPath.length > 0) {
-                const lastPoint = window.runPath[window.runPath.length - 1];
-                const distance = calculateDistance(lastPoint.lat, lastPoint.lng, lat, lng);
-                
-                // Minimum 2 meters between points
-                if (distance < 2) return;
-            }
-
-            window.runPath.push(newPoint);
-
-            // Update trail on map
-            updateTrailOnMap();
-
-            // Update stats display
-            updateRunStatsDisplay();
-
-            // Check for auto-close if very close to start
-            if (window.runPath.length >= 10) {
-                const startPoint = window.runPath[0];
-                const distanceToStart = calculateDistance(startPoint.lat, startPoint.lng, lat, lng);
-                
-                // Auto-close suggestion
-                if (distanceToStart <= window.LOOP_CLOSURE_THRESHOLD && distanceToStart > 0) {
-                    setRunStatus('running');
-                    document.getElementById('loopProgressBar').classList.remove('bg-primary');
-                    document.getElementById('loopProgressBar').classList.add('bg-green-400');
-                }
-            }
-
-            console.log('Path point recorded. Total points:', window.runPath.length);
-        }
-
-        // ================================
-        // INITIALIZE TRAIL ON MAP
-        // ================================
-        function initializeTrailOnMap() {
-            if (!window.mapInstance || typeof mappls === 'undefined') return;
-
-            // Remove existing trail
-            if (window.trailPolyline) {
-                window.trailPolyline.remove();
-            }
-
-            // Create new trail polyline
-            window.trailPolyline = new mappls.Polyline({
-                paths: [],
-                strokeColor: '#10B981',
-                strokeOpacity: 1,
-                strokeWeight: 4
-            });
-
-            window.trailPolyline.addTo(window.mapInstance);
-        }
-
-        // ================================
-        // UPDATE TRAIL ON MAP
-        // ================================
-        function updateTrailOnMap() {
-            if (!window.mapInstance || typeof mappls === 'undefined' || !window.trailPolyline) return;
-
-            const pathCoords = window.runPath.map(point => [point.lng, point.lat]);
-            
-            // Update polyline path
-            window.trailPolyline.setPath(pathCoords);
-        }
-
-        // ================================
-        // SAVE CAPTURED TERRITORY
-        // ================================
-        async function saveCapturedTerritory(path, area, coins) {
-            // Draw the captured polygon on map
-            drawCapturedPolygon(path);
-
-            // Update user stats in Firestore
-            await window.updateUserStats(area, coins);
-
-            console.log('Territory saved:', { area, coins });
-        }
-
-        // ================================
-        // DRAW CAPTURED POLYGON ON MAP
+        // DRAW CAPTURED POLYGON (GREEN FILL)
         // ================================
         function drawCapturedPolygon(path) {
-            if (!window.mapInstance || typeof mappls === 'undefined') return;
+            if (!window.mapInstance) return;
 
-            const polygonCoords = path.map(point => [point.lng, point.lat]);
+            const coords = path.map(p => [p.lng, p.lat]);
 
-            const capturedPolygon = new mappls.Polygon({
-                paths: polygonCoords,
-                fillColor: 'rgba(16, 185, 129, 0.3)',
-                strokeColor: '#10B981',
+            const polygon = new mappls.Polygon({
+                map: window.mapInstance,
+                paths: coords,
+                fillColor: '#10B981',
+                fillOpacity: 0.4,
+                strokeColor: '#059669',
                 strokeOpacity: 1,
-                strokeWeight: 2,
-                fillOpacity: 0.3
+                strokeWeight: 3
             });
 
-            capturedPolygon.addTo(window.mapInstance);
-            window.capturedPolygons.push(capturedPolygon);
-
-            // Convert trail to polygon outline
-            if (window.trailPolyline) {
-                window.trailPolyline.remove();
-                window.trailPolyline = null;
-            }
+            window.capturedPolygons.push(polygon);
+            console.log('✅ Captured polygon drawn');
         }
 
         // ================================
         // KEYBOARD SHORTCUTS
         // ================================
         document.addEventListener('keydown', (e) => {
-            // Space bar to toggle run
-            if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+            if (e.target.tagName === 'INPUT') return;
+
+            if (e.code === 'Space') {
                 e.preventDefault();
-                if (window.isRunning) {
-                    stopRun();
-                } else if (window.currentPosition) {
-                    startRun();
-                }
+                if (window.canCloseLoop) closeLoop();
+                else if (window.isRunning) stopRun();
+                else if (window.currentPosition) startRun();
             }
 
-            // C to center on user
-            if (e.code === 'KeyC' && e.target.tagName !== 'INPUT') {
+            if (e.code === 'KeyC') {
                 centerOnUser();
-            }
-
-            // Escape to close sidebar on mobile
-            if (e.code === 'Escape') {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar.classList.contains('open')) {
-                    toggleSidebar();
-                }
             }
         });
 
-        // ================================
-        // PREVENT ACCIDENTAL PAGE LEAVE DURING RUN
-        // ================================
+        // Prevent accidental page close during run
         window.addEventListener('beforeunload', (e) => {
             if (window.isRunning) {
                 e.preventDefault();
-                e.returnValue = 'You have an active run. Are you sure you want to leave?';
-                return e.returnValue;
+                e.returnValue = 'You have an active run!';
             }
         });
 
-        // ================================
-        // VISIBILITY CHANGE HANDLER
-        // ================================
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && window.isRunning) {
-                // Page is hidden but run is active - show warning on return
-                console.log('Page hidden during active run');
-            } else if (!document.hidden && window.isRunning) {
-                // Page visible again - resume tracking
-                console.log('Page visible, run still active');
-                showToast('Welcome back! Your run is still active.', 'success');
-            }
-        });
-
-        // ================================
-        // SERVICE WORKER REGISTRATION (for PWA capability)
-        // ================================
-        if ('serviceWorker' in navigator) {
-            // Basic offline capability - can be extended later
-            console.log('Service Worker API available');
-        }
-
-        // ================================
-        // INITIALIZE APP
-        // ================================
-        console.log('Territory Run Dashboard loaded');
-        console.log('Game Constants:', {
-            SAFE_ZONE_RADIUS: window.SAFE_ZONE_RADIUS,
-            LOOP_CLOSURE_THRESHOLD: window.LOOP_CLOSURE_THRESHOLD,
-            MIN_CAPTURE_AREA: window.MIN_CAPTURE_AREA,
-            COINS_PER_100_SQM: window.COINS_PER_100_SQM,
-            BONUS_COINS_PER_RUN: window.BONUS_COINS_PER_RUN
-        });
+        console.log('🎮 Territory Run loaded');
+        console.log('Press SPACE to start/stop run, C to center');
     </script>
 </body>
 </html>
