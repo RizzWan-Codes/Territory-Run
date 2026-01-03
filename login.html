@@ -1,809 +1,809 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Territory - Territory Run</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#10B981',
-                        secondary: '#3B82F6',
-                        dark: { 950: '#050507', 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24' },
-                        accent: '#F59E0B'
-                    },
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'spin-slow': 'spin 1s linear infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-5px)' },
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Access Territory - Territory Run</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#10B981',
+                            secondary: '#3B82F6',
+                            dark: { 950: '#050507', 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a24' },
+                            accent: '#F59E0B'
+                        },
+                        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                        animation: {
+                            'float': 'float 6s ease-in-out infinite',
+                            'spin-slow': 'spin 1s linear infinite',
+                        },
+                        keyframes: {
+                            float: {
+                                '0%, 100%': { transform: 'translateY(0)' },
+                                '50%': { transform: 'translateY(-5px)' },
+                            }
                         }
                     }
                 }
             }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body { font-family: 'Inter', sans-serif; overflow: hidden; }
+        </script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
         
-        /* Floating Card Animation */
-        .card-float { animation: subtle-float 8s ease-in-out infinite; }
-        @keyframes subtle-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+        <style>
+            body { font-family: 'Inter', sans-serif; overflow: hidden; }
+            
+            /* Floating Card Animation */
+            .card-float { animation: subtle-float 8s ease-in-out infinite; }
+            @keyframes subtle-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
 
-        /* Autofill Styling */
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover, 
-        input:-webkit-autofill:focus, 
-        input:-webkit-autofill:active{
-            -webkit-box-shadow: 0 0 0 30px #12121a inset !important;
-            -webkit-text-fill-color: white !important;
-            transition: background-color 5000s ease-in-out 0s;
-        }
+            /* Autofill Styling */
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover, 
+            input:-webkit-autofill:focus, 
+            input:-webkit-autofill:active{
+                -webkit-box-shadow: 0 0 0 30px #12121a inset !important;
+                -webkit-text-fill-color: white !important;
+                transition: background-color 5000s ease-in-out 0s;
+            }
 
-        /* Form Toggle Transitions */
-        .hidden-form { display: none; opacity: 0; transform: scale(0.95); }
-        .visible-form { display: block; opacity: 1; transform: scale(1); animation: fadeIn 0.4s forwards; }
+            /* Form Toggle Transitions */
+            .hidden-form { display: none; opacity: 0; transform: scale(0.95); }
+            .visible-form { display: block; opacity: 1; transform: scale(1); animation: fadeIn 0.4s forwards; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .strength-bar { transition: width 0.3s ease, background-color 0.3s ease; }
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+            
+            .strength-bar { transition: width 0.3s ease, background-color 0.3s ease; }
 
-        /* Disabled Button State */
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: grayscale(100%);
-        }
+            /* Disabled Button State */
+            button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                filter: grayscale(100%);
+            }
 
-        /* Error Message Styling */
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #FCA5A5;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            font-size: 0.875rem;
-            margin-top: 1rem;
-            display: none;
-        }
-        .error-message.show {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+            /* Error Message Styling */
+            .error-message {
+                background: rgba(239, 68, 68, 0.1);
+                border: 1px solid rgba(239, 68, 68, 0.3);
+                color: #FCA5A5;
+                padding: 0.75rem;
+                border-radius: 0.75rem;
+                font-size: 0.875rem;
+                margin-top: 1rem;
+                display: none;
+            }
+            .error-message.show {
+                display: block;
+                animation: slideDown 0.3s ease;
+            }
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
 
-        /* Divider with "or" */
-        .divider-with-text {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 1.5rem 0;
-        }
-        .divider-with-text::before,
-        .divider-with-text::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .divider-with-text span {
-            padding: 0 1rem;
-            color: #6b7280;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+            /* Divider with "or" */
+            .divider-with-text {
+                display: flex;
+                align-items: center;
+                text-align: center;
+                margin: 1.5rem 0;
+            }
+            .divider-with-text::before,
+            .divider-with-text::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            .divider-with-text span {
+                padding: 0 1rem;
+                color: #6b7280;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
 
-        /* Google Button Hover Effect */
-        .google-btn {
-            transition: all 0.3s ease;
-        }
-        .google-btn:hover {
-            background: rgba(255, 255, 255, 0.95);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
-        }
-        .google-btn:active {
-            transform: translateY(0);
-        }
-    </style>
-</head>
-<body class="bg-dark-950 text-white antialiased h-screen w-screen relative flex items-center justify-center">
+            /* Google Button Hover Effect */
+            .google-btn {
+                transition: all 0.3s ease;
+            }
+            .google-btn:hover {
+                background: rgba(255, 255, 255, 0.95);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+            }
+            .google-btn:active {
+                transform: translateY(0);
+            }
+        </style>
+    </head>
+    <body class="bg-dark-950 text-white antialiased h-screen w-screen relative flex items-center justify-center">
 
-    <canvas id="bgCanvas" class="absolute inset-0 z-0"></canvas>
-    <div class="absolute inset-0 z-0 bg-radial-gradient from-transparent to-dark-950/90 pointer-events-none"></div>
+        <canvas id="bgCanvas" class="absolute inset-0 z-0"></canvas>
+        <div class="absolute inset-0 z-0 bg-radial-gradient from-transparent to-dark-950/90 pointer-events-none"></div>
 
-    <div class="relative z-10 w-full max-w-md px-6 card-float my-auto h-full max-h-screen overflow-y-auto hide-scrollbar flex items-center">
-        
-        <div class="w-full">
-            <div class="text-center mb-6">
-                <a href="index.html" class="inline-flex items-center space-x-3 group cursor-pointer transition-transform hover:scale-105">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                        <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
-                            <line x1="9" y1="3" x2="9" y2="18"/>
-                            <line x1="15" y1="6" x2="15" y2="21"/>
-                        </svg>
-                    </div>
-                    <span class="text-xl font-bold tracking-tight">
-                        Territory<span class="text-primary">Run</span>
-                    </span>
-                </a>
-            </div>
-
-            <div class="bg-dark-900/70 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden transition-all duration-300" id="mainCard">
-                
-                <div class="absolute inset-0 pointer-events-none">
-                    <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+        <div class="relative z-10 w-full max-w-md px-6 card-float my-auto h-full max-h-screen overflow-y-auto hide-scrollbar flex items-center">
+            
+            <div class="w-full">
+                <div class="text-center mb-6">
+                    <a href="index.html" class="inline-flex items-center space-x-3 group cursor-pointer transition-transform hover:scale-105">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                            <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+                                <line x1="9" y1="3" x2="9" y2="18"/>
+                                <line x1="15" y1="6" x2="15" y2="21"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight">
+                            Territory<span class="text-primary">Run</span>
+                        </span>
+                    </a>
                 </div>
 
-                <!-- LOGIN FORM -->
-                <div id="loginForm" class="visible-form">
-                    <div class="mb-6 text-center">
-                        <h2 class="text-2xl font-bold">Welcome Back</h2>
-                        <p class="text-sm text-gray-400 mt-1">Enter your coordinates to resume.</p>
+                <div class="bg-dark-900/70 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden transition-all duration-300" id="mainCard">
+                    
+                    <div class="absolute inset-0 pointer-events-none">
+                        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                     </div>
 
-                    <!-- Google Sign In Button -->
-                    <button type="button" id="googleLoginBtn" onclick="signInWithGoogle()" class="google-btn w-full flex items-center justify-center space-x-3 bg-white text-gray-800 rounded-xl px-4 py-3.5 font-semibold shadow-lg">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        <span id="googleLoginBtnText">Continue with Google</span>
-                        <svg id="googleLoginBtnSpinner" class="w-5 h-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-                    </button>
-
-                    <div class="divider-with-text">
-                        <span>or continue with email</span>
-                    </div>
-
-                    <form class="space-y-5" id="loginFormElement">
-                        <div class="group/input">
-                            <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Email</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                                </div>
-                                <input type="email" id="loginEmail" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="runner@territory.com" required>
-                            </div>
+                    <!-- LOGIN FORM -->
+                    <div id="loginForm" class="visible-form">
+                        <div class="mb-6 text-center">
+                            <h2 class="text-2xl font-bold">Welcome Back</h2>
+                            <p class="text-sm text-gray-400 mt-1">Enter your coordinates to resume.</p>
                         </div>
 
-                        <div class="group/input">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Access Key</label>
-                                <a href="#" class="text-xs text-primary hover:text-emerald-400 transition-colors" onclick="resetPassword(event)">Forgot?</a>
-                            </div>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                </div>
-                                <input type="password" id="loginPass" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="••••••••" required>
-                            </div>
-                        </div>
-
-                        <div id="loginError" class="error-message"></div>
-
-                        <button type="submit" id="loginBtn" disabled class="w-full relative group overflow-hidden bg-gradient-to-r from-primary to-emerald-600 rounded-xl px-4 py-3.5 font-semibold text-white shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5">
-                            <span class="relative flex items-center justify-center space-x-2">
-                                <span id="loginBtnText">Enter Territory</span>
-                                <svg id="loginBtnArrow" class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                <svg id="loginBtnSpinner" class="w-4 h-4 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-                            </span>
+                        <!-- Google Sign In Button -->
+                        <button type="button" id="googleLoginBtn" onclick="signInWithGoogle()" class="google-btn w-full flex items-center justify-center space-x-3 bg-white text-gray-800 rounded-xl px-4 py-3.5 font-semibold shadow-lg">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            <span id="googleLoginBtnText">Continue with Google</span>
+                            <svg id="googleLoginBtnSpinner" class="w-5 h-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
                         </button>
-                    </form>
 
-                    <div class="text-center mt-6 pt-6 border-t border-white/5">
-                        <p class="text-sm text-gray-500">
-                            New to the game? 
-                            <button onclick="toggleForms('signup')" class="font-medium text-white hover:text-primary transition-colors ml-1">Create Account</button>
-                        </p>
+                        <div class="divider-with-text">
+                            <span>or continue with email</span>
+                        </div>
+
+                        <form class="space-y-5" id="loginFormElement">
+                            <div class="group/input">
+                                <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    </div>
+                                    <input type="email" id="loginEmail" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="runner@territory.com" required>
+                                </div>
+                            </div>
+
+                            <div class="group/input">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <label class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Access Key</label>
+                                    <a href="#" class="text-xs text-primary hover:text-emerald-400 transition-colors" onclick="resetPassword(event)">Forgot?</a>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                    </div>
+                                    <input type="password" id="loginPass" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="••••••••" required>
+                                </div>
+                            </div>
+
+                            <div id="loginError" class="error-message"></div>
+
+                            <button type="submit" id="loginBtn" disabled class="w-full relative group overflow-hidden bg-gradient-to-r from-primary to-emerald-600 rounded-xl px-4 py-3.5 font-semibold text-white shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all transform hover:-translate-y-0.5">
+                                <span class="relative flex items-center justify-center space-x-2">
+                                    <span id="loginBtnText">Enter Territory</span>
+                                    <svg id="loginBtnArrow" class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                                    <svg id="loginBtnSpinner" class="w-4 h-4 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                                </span>
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-6 pt-6 border-t border-white/5">
+                            <p class="text-sm text-gray-500">
+                                New to the game? 
+                                <button onclick="toggleForms('signup')" class="font-medium text-white hover:text-primary transition-colors ml-1">Create Account</button>
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- SIGNUP FORM -->
-                <div id="signupForm" class="hidden-form">
-                    <div class="mb-4 text-center">
-                        <h2 class="text-2xl font-bold">New Recruit</h2>
-                        <p class="text-sm text-gray-400 mt-1">Claim your identity and start running.</p>
-                    </div>
-
-                    <!-- Google Sign Up Button -->
-                    <button type="button" id="googleSignupBtn" onclick="signInWithGoogle()" class="google-btn w-full flex items-center justify-center space-x-3 bg-white text-gray-800 rounded-xl px-4 py-3.5 font-semibold shadow-lg">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        <span id="googleSignupBtnText">Sign up with Google</span>
-                        <svg id="googleSignupBtnSpinner" class="w-5 h-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-                    </button>
-
-                    <div class="divider-with-text">
-                        <span>or sign up with email</span>
-                    </div>
-
-                    <form class="space-y-4" id="signupFormElement">
-                        
-                        <div class="flex items-center space-x-4 bg-dark-800/50 p-3 rounded-xl border border-white/5 mb-2">
-                            <div class="relative group/avatar cursor-pointer flex-shrink-0" onclick="generateNewAvatar()">
-                                <div class="w-16 h-16 rounded-full bg-dark-700 border border-primary/30 overflow-hidden shadow-inner relative">
-                                    <img id="userAvatar" src="" alt="Avatar" class="w-full h-full object-cover">
-                                </div>
-                                <div class="absolute bottom-0 right-0 bg-primary text-dark-950 rounded-full p-1 shadow-lg transform group-hover/avatar:scale-110 transition-transform">
-                                    <svg id="refreshIcon" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-xs text-primary font-semibold uppercase tracking-wider mb-0.5">Generated Identity</p>
-                                <p class="text-xs text-gray-400">Tap the icon to reroll your look.</p>
-                            </div>
+                    <!-- SIGNUP FORM -->
+                    <div id="signupForm" class="hidden-form">
+                        <div class="mb-4 text-center">
+                            <h2 class="text-2xl font-bold">New Recruit</h2>
+                            <p class="text-sm text-gray-400 mt-1">Claim your identity and start running.</p>
                         </div>
 
-                        <div class="group/input">
-                            <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Gamertag</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                                </div>
-                                <input type="text" id="signupGamertag" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="ShadowRunner99" required>
-                            </div>
-                        </div>
-
-                        <div class="group/input">
-                            <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Email</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                                </div>
-                                <input type="email" id="signupEmail" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="runner@territory.com" required>
-                            </div>
-                        </div>
-
-                        <div class="group/input">
-                            <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Create Key</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                </div>
-                                <input type="password" id="signupPass" onkeyup="checkStrength(this.value)" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="Create password" required>
-                            </div>
-                            <div class="h-1 w-full bg-dark-700 mt-2 rounded-full overflow-hidden">
-                                <div id="strengthBar" class="strength-bar h-full bg-red-500 w-0"></div>
-                            </div>
-                        </div>
-
-                        <div id="signupError" class="error-message"></div>
-
-                        <button type="submit" id="signupBtn" disabled class="w-full relative group overflow-hidden bg-white text-dark-950 rounded-xl px-4 py-3.5 font-bold hover:bg-gray-100 transition-colors shadow-lg mt-2">
-                            <span class="relative flex items-center justify-center space-x-2">
-                                <span id="signupBtnText">Initialize Profile</span>
-                                <svg id="signupBtnSpinner" class="w-4 h-4 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
-                            </span>
+                        <!-- Google Sign Up Button -->
+                        <button type="button" id="googleSignupBtn" onclick="signInWithGoogle()" class="google-btn w-full flex items-center justify-center space-x-3 bg-white text-gray-800 rounded-xl px-4 py-3.5 font-semibold shadow-lg">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            <span id="googleSignupBtnText">Sign up with Google</span>
+                            <svg id="googleSignupBtnSpinner" class="w-5 h-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
                         </button>
-                    </form>
 
-                    <div class="text-center mt-6 pt-6 border-t border-white/5">
-                        <p class="text-sm text-gray-500">
-                            Already have territory? 
-                            <button onclick="toggleForms('login')" class="font-medium text-primary hover:text-emerald-400 transition-colors ml-1">Login Here</button>
-                        </p>
+                        <div class="divider-with-text">
+                            <span>or sign up with email</span>
+                        </div>
+
+                        <form class="space-y-4" id="signupFormElement">
+                            
+                            <div class="flex items-center space-x-4 bg-dark-800/50 p-3 rounded-xl border border-white/5 mb-2">
+                                <div class="relative group/avatar cursor-pointer flex-shrink-0" onclick="generateNewAvatar()">
+                                    <div class="w-16 h-16 rounded-full bg-dark-700 border border-primary/30 overflow-hidden shadow-inner relative">
+                                        <img id="userAvatar" src="" alt="Avatar" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="absolute bottom-0 right-0 bg-primary text-dark-950 rounded-full p-1 shadow-lg transform group-hover/avatar:scale-110 transition-transform">
+                                        <svg id="refreshIcon" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-primary font-semibold uppercase tracking-wider mb-0.5">Generated Identity</p>
+                                    <p class="text-xs text-gray-400">Tap the icon to reroll your look.</p>
+                                </div>
+                            </div>
+
+                            <div class="group/input">
+                                <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Gamertag</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    </div>
+                                    <input type="text" id="signupGamertag" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="ShadowRunner99" required>
+                                </div>
+                            </div>
+
+                            <div class="group/input">
+                                <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    </div>
+                                    <input type="email" id="signupEmail" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="runner@territory.com" required>
+                                </div>
+                            </div>
+
+                            <div class="group/input">
+                                <label class="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">Create Key</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-500 group-focus-within/input:text-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                    </div>
+                                    <input type="password" id="signupPass" onkeyup="checkStrength(this.value)" class="block w-full pl-10 pr-3 py-3 bg-dark-800 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all outline-none" placeholder="Create password" required>
+                                </div>
+                                <div class="h-1 w-full bg-dark-700 mt-2 rounded-full overflow-hidden">
+                                    <div id="strengthBar" class="strength-bar h-full bg-red-500 w-0"></div>
+                                </div>
+                            </div>
+
+                            <div id="signupError" class="error-message"></div>
+
+                            <button type="submit" id="signupBtn" disabled class="w-full relative group overflow-hidden bg-white text-dark-950 rounded-xl px-4 py-3.5 font-bold hover:bg-gray-100 transition-colors shadow-lg mt-2">
+                                <span class="relative flex items-center justify-center space-x-2">
+                                    <span id="signupBtnText">Initialize Profile</span>
+                                    <svg id="signupBtnSpinner" class="w-4 h-4 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                                </span>
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-6 pt-6 border-t border-white/5">
+                            <p class="text-sm text-gray-500">
+                                Already have territory? 
+                                <button onclick="toggleForms('login')" class="font-medium text-primary hover:text-emerald-400 transition-colors ml-1">Login Here</button>
+                            </p>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        <!-- Firebase SDK -->
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+            import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+            import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAqIobLBC_cfW_hfw5P073Go_dW7MbLR6s",
-            authDomain: "territory-run-e7df3.firebaseapp.com",
-            projectId: "territory-run-e7df3",
-            storageBucket: "territory-run-e7df3.firebasestorage.app",
-            messagingSenderId: "733520135692",
-            appId: "1:733520135692:web:74923175464454eb7cd029"
-        };
+            // Firebase Configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyAqIobLBC_cfW_hfw5P073Go_dW7MbLR6s",
+                authDomain: "territory-run-e7df3.firebaseapp.com",
+                projectId: "territory-run-e7df3",
+                storageBucket: "territory-run-e7df3.firebasestorage.app",
+                messagingSenderId: "733520135692",
+                appId: "1:733520135692:web:74923175464454eb7cd029"
+            };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const googleProvider = new GoogleAuthProvider();
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const googleProvider = new GoogleAuthProvider();
 
-        // Configure Google Provider
-        googleProvider.setCustomParameters({
-            prompt: 'select_account'
-        });
+            // Configure Google Provider
+            googleProvider.setCustomParameters({
+                prompt: 'select_account'
+            });
 
-        // Make functions globally accessible
-        window.firebaseAuth = auth;
-        window.firebaseDb = db;
+            // Make functions globally accessible
+            window.firebaseAuth = auth;
+            window.firebaseDb = db;
 
-        // Google Sign In Function
-        window.signInWithGoogle = async () => {
-            const loginBtn = document.getElementById('googleLoginBtn');
-            const signupBtn = document.getElementById('googleSignupBtn');
-            const loginBtnText = document.getElementById('googleLoginBtnText');
-            const signupBtnText = document.getElementById('googleSignupBtnText');
-            const loginBtnSpinner = document.getElementById('googleLoginBtnSpinner');
-            const signupBtnSpinner = document.getElementById('googleSignupBtnSpinner');
-            const loginError = document.getElementById('loginError');
-            const signupError = document.getElementById('signupError');
+            // Google Sign In Function
+            window.signInWithGoogle = async () => {
+                const loginBtn = document.getElementById('googleLoginBtn');
+                const signupBtn = document.getElementById('googleSignupBtn');
+                const loginBtnText = document.getElementById('googleLoginBtnText');
+                const signupBtnText = document.getElementById('googleSignupBtnText');
+                const loginBtnSpinner = document.getElementById('googleLoginBtnSpinner');
+                const signupBtnSpinner = document.getElementById('googleSignupBtnSpinner');
+                const loginError = document.getElementById('loginError');
+                const signupError = document.getElementById('signupError');
 
-            // Show loading state on both buttons
-            if (loginBtn) {
+                // Show loading state on both buttons
+                if (loginBtn) {
+                    loginBtn.disabled = true;
+                    loginBtnText.textContent = 'Connecting...';
+                    loginBtnSpinner.classList.remove('hidden');
+                }
+                if (signupBtn) {
+                    signupBtn.disabled = true;
+                    signupBtnText.textContent = 'Connecting...';
+                    signupBtnSpinner.classList.remove('hidden');
+                }
+
+                // Clear previous errors
+                loginError.classList.remove('show');
+                signupError.classList.remove('show');
+
+                try {
+                    const result = await signInWithPopup(auth, googleProvider);
+                    const user = result.user;
+
+                    console.log('Google Sign In successful:', user);
+
+                    // Check if user document exists in Firestore
+                    const userDocRef = doc(db, 'users', user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (!userDocSnap.exists()) {
+                        // New user - create profile in Firestore
+                        const gamertag = user.displayName || user.email.split('@')[0];
+                        const avatarUrl = user.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user.uid}&backgroundColor=b6e3f4,c0aede,d1d4f9&backgroundType=gradientLinear`;
+
+                        await setDoc(userDocRef, {
+                            gamertag: gamertag,
+                            email: user.email,
+                            avatarUrl: avatarUrl,
+                            createdAt: new Date().toISOString(),
+                            level: 1,
+                            xp: 0,
+                            territoriesCaptured: 0,
+                            authProvider: 'google'
+                        });
+
+                        console.log('New user profile created in Firestore');
+                    }
+
+                    // Update button to show success
+                    if (loginBtnText) loginBtnText.textContent = 'Success!';
+                    if (signupBtnText) signupBtnText.textContent = 'Success!';
+                    if (loginBtnSpinner) loginBtnSpinner.classList.add('hidden');
+                    if (signupBtnSpinner) signupBtnSpinner.classList.add('hidden');
+
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 500);
+
+                } catch (error) {
+                    console.error('Google Sign In error:', error);
+
+                    let errorMessage = 'Failed to sign in with Google. ';
+
+                    switch (error.code) {
+                        case 'auth/account-exists-with-different-credential':
+                            errorMessage += 'An account already exists with this email using a different sign-in method.';
+                            break;
+                        case 'auth/popup-blocked':
+                            errorMessage += 'Popup was blocked. Please allow popups for this site.';
+                            break;
+                        case 'auth/popup-closed-by-user':
+                            errorMessage += 'Sign-in was cancelled.';
+                            break;
+                        case 'auth/cancelled-popup-request':
+                            errorMessage += 'Sign-in was cancelled.';
+                            break;
+                        case 'auth/network-request-failed':
+                            errorMessage += 'Network error. Please check your connection.';
+                            break;
+                        default:
+                            errorMessage += error.message;
+                    }
+
+                    // Show error on whichever form is visible
+                    const loginFormVisible = !document.getElementById('loginForm').classList.contains('hidden-form');
+                    if (loginFormVisible) {
+                        loginError.textContent = errorMessage;
+                        loginError.classList.add('show');
+                    } else {
+                        signupError.textContent = errorMessage;
+                        signupError.classList.add('show');
+                    }
+
+                    // Reset button states
+                    if (loginBtn) {
+                        loginBtn.disabled = false;
+                        loginBtnText.textContent = 'Continue with Google';
+                        loginBtnSpinner.classList.add('hidden');
+                    }
+                    if (signupBtn) {
+                        signupBtn.disabled = false;
+                        signupBtnText.textContent = 'Sign up with Google';
+                        signupBtnSpinner.classList.add('hidden');
+                    }
+                }
+            };
+
+            // Login Form Handler
+            document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPass').value;
+                const loginBtn = document.getElementById('loginBtn');
+                const loginBtnText = document.getElementById('loginBtnText');
+                const loginBtnArrow = document.getElementById('loginBtnArrow');
+                const loginBtnSpinner = document.getElementById('loginBtnSpinner');
+                const errorDiv = document.getElementById('loginError');
+
+                // Show loading state
                 loginBtn.disabled = true;
-                loginBtnText.textContent = 'Connecting...';
+                loginBtnText.textContent = 'Accessing...';
+                loginBtnArrow.classList.add('hidden');
                 loginBtnSpinner.classList.remove('hidden');
-            }
-            if (signupBtn) {
+                errorDiv.classList.remove('show');
+
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    console.log('Login successful:', userCredential.user);
+                    
+                    // Success - redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    
+                    // Show error message
+                    let errorMessage = 'Failed to access territory. ';
+                    
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errorMessage += 'Invalid email format.';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMessage += 'This account has been disabled.';
+                            break;
+                        case 'auth/user-not-found':
+                            errorMessage += 'No account found with this email.';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage += 'Incorrect password.';
+                            break;
+                        case 'auth/invalid-credential':
+                            errorMessage += 'Invalid credentials. Check your email and password.';
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage += 'Too many failed attempts. Try again later.';
+                            break;
+                        default:
+                            errorMessage += error.message;
+                    }
+                    
+                    errorDiv.textContent = errorMessage;
+                    errorDiv.classList.add('show');
+                    
+                    // Reset button state
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = 'Enter Territory';
+                    loginBtnArrow.classList.remove('hidden');
+                    loginBtnSpinner.classList.add('hidden');
+                }
+            });
+
+            // Signup Form Handler
+            document.getElementById('signupFormElement').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const gamertag = document.getElementById('signupGamertag').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPass').value;
+                const avatarUrl = document.getElementById('userAvatar').src;
+                const signupBtn = document.getElementById('signupBtn');
+                const signupBtnText = document.getElementById('signupBtnText');
+                const signupBtnSpinner = document.getElementById('signupBtnSpinner');
+                const errorDiv = document.getElementById('signupError');
+
+                // Show loading state
                 signupBtn.disabled = true;
-                signupBtnText.textContent = 'Connecting...';
+                signupBtnText.textContent = 'Creating Profile...';
                 signupBtnSpinner.classList.remove('hidden');
-            }
+                errorDiv.classList.remove('show');
 
-            // Clear previous errors
-            loginError.classList.remove('show');
-            signupError.classList.remove('show');
+                try {
+                    // Create user account
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    
+                    // Update user profile with display name
+                    await updateProfile(user, {
+                        displayName: gamertag,
+                        photoURL: avatarUrl
+                    });
 
-            try {
-                const result = await signInWithPopup(auth, googleProvider);
-                const user = result.user;
-
-                console.log('Google Sign In successful:', user);
-
-                // Check if user document exists in Firestore
-                const userDocRef = doc(db, 'users', user.uid);
-                const userDocSnap = await getDoc(userDocRef);
-
-                if (!userDocSnap.exists()) {
-                    // New user - create profile in Firestore
-                    const gamertag = user.displayName || user.email.split('@')[0];
-                    const avatarUrl = user.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user.uid}&backgroundColor=b6e3f4,c0aede,d1d4f9&backgroundType=gradientLinear`;
-
-                    await setDoc(userDocRef, {
+                    // Store additional user data in Firestore
+                    await setDoc(doc(db, 'users', user.uid), {
                         gamertag: gamertag,
-                        email: user.email,
+                        email: email,
                         avatarUrl: avatarUrl,
                         createdAt: new Date().toISOString(),
                         level: 1,
                         xp: 0,
                         territoriesCaptured: 0,
-                        authProvider: 'google'
+                        authProvider: 'email'
                     });
 
-                    console.log('New user profile created in Firestore');
-                }
-
-                // Update button to show success
-                if (loginBtnText) loginBtnText.textContent = 'Success!';
-                if (signupBtnText) signupBtnText.textContent = 'Success!';
-                if (loginBtnSpinner) loginBtnSpinner.classList.add('hidden');
-                if (signupBtnSpinner) signupBtnSpinner.classList.add('hidden');
-
-                // Redirect to dashboard
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 500);
-
-            } catch (error) {
-                console.error('Google Sign In error:', error);
-
-                let errorMessage = 'Failed to sign in with Google. ';
-
-                switch (error.code) {
-                    case 'auth/account-exists-with-different-credential':
-                        errorMessage += 'An account already exists with this email using a different sign-in method.';
-                        break;
-                    case 'auth/popup-blocked':
-                        errorMessage += 'Popup was blocked. Please allow popups for this site.';
-                        break;
-                    case 'auth/popup-closed-by-user':
-                        errorMessage += 'Sign-in was cancelled.';
-                        break;
-                    case 'auth/cancelled-popup-request':
-                        errorMessage += 'Sign-in was cancelled.';
-                        break;
-                    case 'auth/network-request-failed':
-                        errorMessage += 'Network error. Please check your connection.';
-                        break;
-                    default:
-                        errorMessage += error.message;
-                }
-
-                // Show error on whichever form is visible
-                const loginFormVisible = !document.getElementById('loginForm').classList.contains('hidden-form');
-                if (loginFormVisible) {
-                    loginError.textContent = errorMessage;
-                    loginError.classList.add('show');
-                } else {
-                    signupError.textContent = errorMessage;
-                    signupError.classList.add('show');
-                }
-
-                // Reset button states
-                if (loginBtn) {
-                    loginBtn.disabled = false;
-                    loginBtnText.textContent = 'Continue with Google';
-                    loginBtnSpinner.classList.add('hidden');
-                }
-                if (signupBtn) {
+                    console.log('Signup successful:', user);
+                    
+                    // Show success message
+                    signupBtnText.textContent = 'Profile Created!';
+                    signupBtnSpinner.classList.add('hidden');
+                    
+                    // Show success notification
+                    errorDiv.style.background = 'rgba(16, 185, 129, 0.1)';
+                    errorDiv.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                    errorDiv.style.color = '#6EE7B7';
+                    errorDiv.textContent = '✓ Account created successfully! Please log in with your credentials.';
+                    errorDiv.classList.add('show');
+                    
+                    // Wait 2 seconds then switch to login form
+                    setTimeout(() => {
+                        toggleForms('login');
+                        // Pre-fill the email in login form
+                        document.getElementById('loginEmail').value = email;
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    
+                    // Show error message
+                    let errorMessage = 'Failed to create profile. ';
+                    
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage += 'This email is already registered.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage += 'Invalid email format.';
+                            break;
+                        case 'auth/operation-not-allowed':
+                            errorMessage += 'Email/password accounts are not enabled.';
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage += 'Password should be at least 6 characters.';
+                            break;
+                        default:
+                            errorMessage += error.message;
+                    }
+                    
+                    errorDiv.textContent = errorMessage;
+                    errorDiv.classList.add('show');
+                    
+                    // Reset button state
                     signupBtn.disabled = false;
-                    signupBtnText.textContent = 'Sign up with Google';
+                    signupBtnText.textContent = 'Initialize Profile';
                     signupBtnSpinner.classList.add('hidden');
                 }
-            }
-        };
+            });
 
-        // Login Form Handler
-        document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPass').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const loginBtnText = document.getElementById('loginBtnText');
-            const loginBtnArrow = document.getElementById('loginBtnArrow');
-            const loginBtnSpinner = document.getElementById('loginBtnSpinner');
-            const errorDiv = document.getElementById('loginError');
-
-            // Show loading state
-            loginBtn.disabled = true;
-            loginBtnText.textContent = 'Accessing...';
-            loginBtnArrow.classList.add('hidden');
-            loginBtnSpinner.classList.remove('hidden');
-            errorDiv.classList.remove('show');
-
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                console.log('Login successful:', userCredential.user);
+            // Password Reset Function
+            window.resetPassword = async (e) => {
+                e.preventDefault();
                 
-                // Success - redirect to dashboard
-                window.location.href = 'dashboard.html';
+                const email = document.getElementById('loginEmail').value;
                 
-            } catch (error) {
-                console.error('Login error:', error);
-                
-                // Show error message
-                let errorMessage = 'Failed to access territory. ';
-                
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMessage += 'Invalid email format.';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage += 'This account has been disabled.';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage += 'No account found with this email.';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage += 'Incorrect password.';
-                        break;
-                    case 'auth/invalid-credential':
-                        errorMessage += 'Invalid credentials. Check your email and password.';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage += 'Too many failed attempts. Try again later.';
-                        break;
-                    default:
-                        errorMessage += error.message;
+                if (!email) {
+                    alert('Please enter your email address first.');
+                    return;
                 }
                 
-                errorDiv.textContent = errorMessage;
-                errorDiv.classList.add('show');
-                
-                // Reset button state
-                loginBtn.disabled = false;
-                loginBtnText.textContent = 'Enter Territory';
-                loginBtnArrow.classList.remove('hidden');
-                loginBtnSpinner.classList.add('hidden');
-            }
-        });
-
-        // Signup Form Handler
-        document.getElementById('signupFormElement').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const gamertag = document.getElementById('signupGamertag').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPass').value;
-            const avatarUrl = document.getElementById('userAvatar').src;
-            const signupBtn = document.getElementById('signupBtn');
-            const signupBtnText = document.getElementById('signupBtnText');
-            const signupBtnSpinner = document.getElementById('signupBtnSpinner');
-            const errorDiv = document.getElementById('signupError');
-
-            // Show loading state
-            signupBtn.disabled = true;
-            signupBtnText.textContent = 'Creating Profile...';
-            signupBtnSpinner.classList.remove('hidden');
-            errorDiv.classList.remove('show');
-
-            try {
-                // Create user account
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                
-                // Update user profile with display name
-                await updateProfile(user, {
-                    displayName: gamertag,
-                    photoURL: avatarUrl
-                });
-
-                // Store additional user data in Firestore
-                await setDoc(doc(db, 'users', user.uid), {
-                    gamertag: gamertag,
-                    email: email,
-                    avatarUrl: avatarUrl,
-                    createdAt: new Date().toISOString(),
-                    level: 1,
-                    xp: 0,
-                    territoriesCaptured: 0,
-                    authProvider: 'email'
-                });
-
-                console.log('Signup successful:', user);
-                
-                // Show success message
-                signupBtnText.textContent = 'Profile Created!';
-                signupBtnSpinner.classList.add('hidden');
-                
-                // Show success notification
-                errorDiv.style.background = 'rgba(16, 185, 129, 0.1)';
-                errorDiv.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-                errorDiv.style.color = '#6EE7B7';
-                errorDiv.textContent = '✓ Account created successfully! Please log in with your credentials.';
-                errorDiv.classList.add('show');
-                
-                // Wait 2 seconds then switch to login form
-                setTimeout(() => {
-                    toggleForms('login');
-                    // Pre-fill the email in login form
-                    document.getElementById('loginEmail').value = email;
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Signup error:', error);
-                
-                // Show error message
-                let errorMessage = 'Failed to create profile. ';
-                
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage += 'This email is already registered.';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage += 'Invalid email format.';
-                        break;
-                    case 'auth/operation-not-allowed':
-                        errorMessage += 'Email/password accounts are not enabled.';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage += 'Password should be at least 6 characters.';
-                        break;
-                    default:
-                        errorMessage += error.message;
-                }
-                
-                errorDiv.textContent = errorMessage;
-                errorDiv.classList.add('show');
-                
-                // Reset button state
-                signupBtn.disabled = false;
-                signupBtnText.textContent = 'Initialize Profile';
-                signupBtnSpinner.classList.add('hidden');
-            }
-        });
-
-        // Password Reset Function
-        window.resetPassword = async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            
-            if (!email) {
-                alert('Please enter your email address first.');
-                return;
-            }
-            
-            try {
-                await sendPasswordResetEmail(auth, email);
-                alert('Password reset email sent! Check your inbox.');
-            } catch (error) {
-                console.error('Password reset error:', error);
-                
-                let errorMessage = 'Failed to send reset email. ';
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMessage += 'Invalid email format.';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage += 'No account found with this email.';
-                        break;
-                    default:
-                        errorMessage += error.message;
-                }
-                alert(errorMessage);
-            }
-        };
-    </script>
-
-    <script>
-        // --- 1. Form Validation Logic ---
-        
-        // Login Validation
-        const loginEmail = document.getElementById('loginEmail');
-        const loginPass = document.getElementById('loginPass');
-        const loginBtn = document.getElementById('loginBtn');
-
-        function validateLogin() {
-            if (loginEmail.value.trim() !== "" && loginPass.value.trim() !== "") {
-                loginBtn.disabled = false;
-            } else {
-                loginBtn.disabled = true;
-            }
-        }
-
-        loginEmail.addEventListener('input', validateLogin);
-        loginPass.addEventListener('input', validateLogin);
-
-        // Signup Validation
-        const signupGamertag = document.getElementById('signupGamertag');
-        const signupEmail = document.getElementById('signupEmail');
-        const signupPass = document.getElementById('signupPass');
-        const signupBtn = document.getElementById('signupBtn');
-
-        function validateSignup() {
-            if (signupGamertag.value.trim() !== "" && signupEmail.value.trim() !== "" && signupPass.value.trim() !== "") {
-                signupBtn.disabled = false;
-            } else {
-                signupBtn.disabled = true;
-            }
-        }
-
-        signupGamertag.addEventListener('input', validateSignup);
-        signupEmail.addEventListener('input', validateSignup);
-        signupPass.addEventListener('input', validateSignup);
-
-        // --- 2. Form Toggling Logic ---
-        function toggleForms(target) {
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            
-            // Clear error messages
-            document.getElementById('loginError').classList.remove('show');
-            document.getElementById('signupError').classList.remove('show');
-            
-            // Reset error div styles
-            const signupError = document.getElementById('signupError');
-            signupError.style.background = 'rgba(239, 68, 68, 0.1)';
-            signupError.style.borderColor = 'rgba(239, 68, 68, 0.3)';
-            signupError.style.color = '#FCA5A5';
-            
-            if (target === 'signup') {
-                loginForm.classList.remove('visible-form');
-                loginForm.classList.add('hidden-form');
-                setTimeout(() => {
-                    signupForm.classList.remove('hidden-form');
-                    signupForm.classList.add('visible-form');
-                    if(document.getElementById('userAvatar').src === "" || document.getElementById('userAvatar').src.includes(window.location.href)) {
-                        generateNewAvatar();
-                    }
-                }, 100);
-            } else {
-                signupForm.classList.remove('visible-form');
-                signupForm.classList.add('hidden-form');
-                setTimeout(() => {
-                    loginForm.classList.remove('hidden-form');
-                    loginForm.classList.add('visible-form');
-                }, 100);
-            }
-        }
-
-        // --- 3. Avatar Generator ---
-        function generateNewAvatar() {
-            const img = document.getElementById('userAvatar');
-            const icon = document.getElementById('refreshIcon');
-            
-            icon.classList.add('animate-spin-slow');
-            
-            const seed = Math.random().toString(36).substring(7);
-            const apiUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9&backgroundType=gradientLinear`;
-            
-            img.src = apiUrl;
-            
-            setTimeout(() => {
-                icon.classList.remove('animate-spin-slow');
-            }, 600);
-        }
-        generateNewAvatar();
-
-        // --- 4. Password Strength Logic ---
-        function checkStrength(password) {
-            validateSignup();
-            const bar = document.getElementById('strengthBar');
-            let strength = 0;
-            if (password.length > 5) strength += 1;
-            if (password.length > 8) strength += 1;
-            if (/[A-Z]/.test(password)) strength += 1;
-            if (/[0-9]/.test(password)) strength += 1;
-            
-            if (password.length === 0) {
-                bar.style.width = '0%';
-            } else if (strength <= 1) {
-                bar.style.width = '25%'; bar.style.backgroundColor = '#EF4444';
-            } else if (strength <= 3) {
-                bar.style.width = '65%'; bar.style.backgroundColor = '#F59E0B';
-            } else {
-                bar.style.width = '100%'; bar.style.backgroundColor = '#10B981';
-            }
-        }
-
-        // --- 5. Background Wave Animation ---
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        const gridSize = 50;
-        
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-        
-        function draw() {
-            ctx.fillStyle = '#050507'; 
-            ctx.fillRect(0, 0, width, height);
-            const time = Date.now() * 0.0015;
-            
-            for (let x = 0; x <= width + gridSize; x += gridSize) {
-                for (let y = 0; y <= height + gridSize; y += gridSize) {
-                    const waveX = Math.sin((x * 0.004) + time);
-                    const waveY = Math.cos((y * 0.004) + time);
-                    const combinedWave = (waveX + waveY) / 2;
-                    let opacity = 0.03 + (Math.max(0, combinedWave) * 0.25);
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    alert('Password reset email sent! Check your inbox.');
+                } catch (error) {
+                    console.error('Password reset error:', error);
                     
-                    let r = 255, g = 255, b = 255;
-                    if (combinedWave > 0.5) {
-                        const intensity = (combinedWave - 0.5) * 2;
-                        r = 255 - (239 * intensity); g = 255 - (70 * intensity); b = 255 - (126 * intensity);
+                    let errorMessage = 'Failed to send reset email. ';
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errorMessage += 'Invalid email format.';
+                            break;
+                        case 'auth/user-not-found':
+                            errorMessage += 'No account found with this email.';
+                            break;
+                        default:
+                            errorMessage += error.message;
                     }
+                    alert(errorMessage);
+                }
+            };
+        </script>
 
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-                    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + gridSize, y); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + gridSize); ctx.stroke();
+        <script>
+            // --- 1. Form Validation Logic ---
+            
+            // Login Validation
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPass = document.getElementById('loginPass');
+            const loginBtn = document.getElementById('loginBtn');
+
+            function validateLogin() {
+                if (loginEmail.value.trim() !== "" && loginPass.value.trim() !== "") {
+                    loginBtn.disabled = false;
+                } else {
+                    loginBtn.disabled = true;
                 }
             }
-            requestAnimationFrame(draw);
-        }
-        draw();
-    </script>
-</body>
-</html>
+
+            loginEmail.addEventListener('input', validateLogin);
+            loginPass.addEventListener('input', validateLogin);
+
+            // Signup Validation
+            const signupGamertag = document.getElementById('signupGamertag');
+            const signupEmail = document.getElementById('signupEmail');
+            const signupPass = document.getElementById('signupPass');
+            const signupBtn = document.getElementById('signupBtn');
+
+            function validateSignup() {
+                if (signupGamertag.value.trim() !== "" && signupEmail.value.trim() !== "" && signupPass.value.trim() !== "") {
+                    signupBtn.disabled = false;
+                } else {
+                    signupBtn.disabled = true;
+                }
+            }
+
+            signupGamertag.addEventListener('input', validateSignup);
+            signupEmail.addEventListener('input', validateSignup);
+            signupPass.addEventListener('input', validateSignup);
+
+            // --- 2. Form Toggling Logic ---
+            function toggleForms(target) {
+                const loginForm = document.getElementById('loginForm');
+                const signupForm = document.getElementById('signupForm');
+                
+                // Clear error messages
+                document.getElementById('loginError').classList.remove('show');
+                document.getElementById('signupError').classList.remove('show');
+                
+                // Reset error div styles
+                const signupError = document.getElementById('signupError');
+                signupError.style.background = 'rgba(239, 68, 68, 0.1)';
+                signupError.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                signupError.style.color = '#FCA5A5';
+                
+                if (target === 'signup') {
+                    loginForm.classList.remove('visible-form');
+                    loginForm.classList.add('hidden-form');
+                    setTimeout(() => {
+                        signupForm.classList.remove('hidden-form');
+                        signupForm.classList.add('visible-form');
+                        if(document.getElementById('userAvatar').src === "" || document.getElementById('userAvatar').src.includes(window.location.href)) {
+                            generateNewAvatar();
+                        }
+                    }, 100);
+                } else {
+                    signupForm.classList.remove('visible-form');
+                    signupForm.classList.add('hidden-form');
+                    setTimeout(() => {
+                        loginForm.classList.remove('hidden-form');
+                        loginForm.classList.add('visible-form');
+                    }, 100);
+                }
+            }
+
+            // --- 3. Avatar Generator ---
+            function generateNewAvatar() {
+                const img = document.getElementById('userAvatar');
+                const icon = document.getElementById('refreshIcon');
+                
+                icon.classList.add('animate-spin-slow');
+                
+                const seed = Math.random().toString(36).substring(7);
+                const apiUrl = `https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9&backgroundType=gradientLinear`;
+                
+                img.src = apiUrl;
+                
+                setTimeout(() => {
+                    icon.classList.remove('animate-spin-slow');
+                }, 600);
+            }
+            generateNewAvatar();
+
+            // --- 4. Password Strength Logic ---
+            function checkStrength(password) {
+                validateSignup();
+                const bar = document.getElementById('strengthBar');
+                let strength = 0;
+                if (password.length > 5) strength += 1;
+                if (password.length > 8) strength += 1;
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                
+                if (password.length === 0) {
+                    bar.style.width = '0%';
+                } else if (strength <= 1) {
+                    bar.style.width = '25%'; bar.style.backgroundColor = '#EF4444';
+                } else if (strength <= 3) {
+                    bar.style.width = '65%'; bar.style.backgroundColor = '#F59E0B';
+                } else {
+                    bar.style.width = '100%'; bar.style.backgroundColor = '#10B981';
+                }
+            }
+
+            // --- 5. Background Wave Animation ---
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            const gridSize = 50;
+            
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+            
+            function draw() {
+                ctx.fillStyle = '#050507'; 
+                ctx.fillRect(0, 0, width, height);
+                const time = Date.now() * 0.0015;
+                
+                for (let x = 0; x <= width + gridSize; x += gridSize) {
+                    for (let y = 0; y <= height + gridSize; y += gridSize) {
+                        const waveX = Math.sin((x * 0.004) + time);
+                        const waveY = Math.cos((y * 0.004) + time);
+                        const combinedWave = (waveX + waveY) / 2;
+                        let opacity = 0.03 + (Math.max(0, combinedWave) * 0.25);
+                        
+                        let r = 255, g = 255, b = 255;
+                        if (combinedWave > 0.5) {
+                            const intensity = (combinedWave - 0.5) * 2;
+                            r = 255 - (239 * intensity); g = 255 - (70 * intensity); b = 255 - (126 * intensity);
+                        }
+
+                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + gridSize, y); ctx.stroke();
+                        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + gridSize); ctx.stroke();
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        </script>
+    </body>
+    </html>
