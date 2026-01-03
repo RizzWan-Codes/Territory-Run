@@ -83,6 +83,40 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Divider with "or" */
+        .divider-with-text {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .divider-with-text::before,
+        .divider-with-text::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .divider-with-text span {
+            padding: 0 1rem;
+            color: #6b7280;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Google Button Hover Effect */
+        .google-btn {
+            transition: all 0.3s ease;
+        }
+        .google-btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+        }
+        .google-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="bg-dark-950 text-white antialiased h-screen w-screen relative flex items-center justify-center">
@@ -115,10 +149,27 @@
                     <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                 </div>
 
+                <!-- LOGIN FORM -->
                 <div id="loginForm" class="visible-form">
                     <div class="mb-6 text-center">
                         <h2 class="text-2xl font-bold">Welcome Back</h2>
                         <p class="text-sm text-gray-400 mt-1">Enter your coordinates to resume.</p>
+                    </div>
+
+                    <!-- Google Sign In Button -->
+                    <button type="button" id="googleLoginBtn" onclick="signInWithGoogle()" class="google-btn w-full flex items-center justify-center space-x-3 bg-white text-gray-800 rounded-xl px-4 py-3.5 font-semibold shadow-lg">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span id="googleLoginBtnText">Continue with Google</span>
+                        <svg id="googleLoginBtnSpinner" class="w-5 h-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                    </button>
+
+                    <div class="divider-with-text">
+                        <span>or continue with email</span>
                     </div>
 
                     <form class="space-y-5" id="loginFormElement">
@@ -164,10 +215,27 @@
                     </div>
                 </div>
 
+                <!-- SIGNUP FORM -->
                 <div id="signupForm" class="hidden-form">
                     <div class="mb-4 text-center">
                         <h2 class="text-2xl font-bold">New Recruit</h2>
                         <p class="text-sm text-gray-400 mt-1">Claim your identity and start running.</p>
+                    </div>
+
+                    <!-- Google Sign Up Button -->
+                    <button type="button" id="googleSignupBtn" onclick="signInWithGoogle()" class="google-btn w-full flex items-center justify-center space-x-3 bg-white text-gray-800 rounded-xl px-4 py-3.5 font-semibold shadow-lg">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span id="googleSignupBtnText">Sign up with Google</span>
+                        <svg id="googleSignupBtnSpinner" class="w-5 h-5 animate-spin hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                    </button>
+
+                    <div class="divider-with-text">
+                        <span>or sign up with email</span>
                     </div>
 
                     <form class="space-y-4" id="signupFormElement">
@@ -245,28 +313,149 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         // Firebase Configuration
-        // REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG
         const firebaseConfig = {
-  apiKey: "AIzaSyAqIobLBC_cfW_hfw5P073Go_dW7MbLR6s",
-  authDomain: "territory-run-e7df3.firebaseapp.com",
-  projectId: "territory-run-e7df3",
-  storageBucket: "territory-run-e7df3.firebasestorage.app",
-  messagingSenderId: "733520135692",
-  appId: "1:733520135692:web:74923175464454eb7cd029"
-};
+            apiKey: "AIzaSyAqIobLBC_cfW_hfw5P073Go_dW7MbLR6s",
+            authDomain: "territory-run-e7df3.firebaseapp.com",
+            projectId: "territory-run-e7df3",
+            storageBucket: "territory-run-e7df3.firebasestorage.app",
+            messagingSenderId: "733520135692",
+            appId: "1:733520135692:web:74923175464454eb7cd029"
+        };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Configure Google Provider
+        googleProvider.setCustomParameters({
+            prompt: 'select_account'
+        });
 
         // Make functions globally accessible
         window.firebaseAuth = auth;
         window.firebaseDb = db;
+
+        // Google Sign In Function
+        window.signInWithGoogle = async () => {
+            const loginBtn = document.getElementById('googleLoginBtn');
+            const signupBtn = document.getElementById('googleSignupBtn');
+            const loginBtnText = document.getElementById('googleLoginBtnText');
+            const signupBtnText = document.getElementById('googleSignupBtnText');
+            const loginBtnSpinner = document.getElementById('googleLoginBtnSpinner');
+            const signupBtnSpinner = document.getElementById('googleSignupBtnSpinner');
+            const loginError = document.getElementById('loginError');
+            const signupError = document.getElementById('signupError');
+
+            // Show loading state on both buttons
+            if (loginBtn) {
+                loginBtn.disabled = true;
+                loginBtnText.textContent = 'Connecting...';
+                loginBtnSpinner.classList.remove('hidden');
+            }
+            if (signupBtn) {
+                signupBtn.disabled = true;
+                signupBtnText.textContent = 'Connecting...';
+                signupBtnSpinner.classList.remove('hidden');
+            }
+
+            // Clear previous errors
+            loginError.classList.remove('show');
+            signupError.classList.remove('show');
+
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                const user = result.user;
+
+                console.log('Google Sign In successful:', user);
+
+                // Check if user document exists in Firestore
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (!userDocSnap.exists()) {
+                    // New user - create profile in Firestore
+                    const gamertag = user.displayName || user.email.split('@')[0];
+                    const avatarUrl = user.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user.uid}&backgroundColor=b6e3f4,c0aede,d1d4f9&backgroundType=gradientLinear`;
+
+                    await setDoc(userDocRef, {
+                        gamertag: gamertag,
+                        email: user.email,
+                        avatarUrl: avatarUrl,
+                        createdAt: new Date().toISOString(),
+                        level: 1,
+                        xp: 0,
+                        territoriesCaptured: 0,
+                        authProvider: 'google'
+                    });
+
+                    console.log('New user profile created in Firestore');
+                }
+
+                // Update button to show success
+                if (loginBtnText) loginBtnText.textContent = 'Success!';
+                if (signupBtnText) signupBtnText.textContent = 'Success!';
+                if (loginBtnSpinner) loginBtnSpinner.classList.add('hidden');
+                if (signupBtnSpinner) signupBtnSpinner.classList.add('hidden');
+
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 500);
+
+            } catch (error) {
+                console.error('Google Sign In error:', error);
+
+                let errorMessage = 'Failed to sign in with Google. ';
+
+                switch (error.code) {
+                    case 'auth/account-exists-with-different-credential':
+                        errorMessage += 'An account already exists with this email using a different sign-in method.';
+                        break;
+                    case 'auth/popup-blocked':
+                        errorMessage += 'Popup was blocked. Please allow popups for this site.';
+                        break;
+                    case 'auth/popup-closed-by-user':
+                        errorMessage += 'Sign-in was cancelled.';
+                        break;
+                    case 'auth/cancelled-popup-request':
+                        errorMessage += 'Sign-in was cancelled.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage += 'Network error. Please check your connection.';
+                        break;
+                    default:
+                        errorMessage += error.message;
+                }
+
+                // Show error on whichever form is visible
+                const loginFormVisible = !document.getElementById('loginForm').classList.contains('hidden-form');
+                if (loginFormVisible) {
+                    loginError.textContent = errorMessage;
+                    loginError.classList.add('show');
+                } else {
+                    signupError.textContent = errorMessage;
+                    signupError.classList.add('show');
+                }
+
+                // Reset button states
+                if (loginBtn) {
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = 'Continue with Google';
+                    loginBtnSpinner.classList.add('hidden');
+                }
+                if (signupBtn) {
+                    signupBtn.disabled = false;
+                    signupBtnText.textContent = 'Sign up with Google';
+                    signupBtnSpinner.classList.add('hidden');
+                }
+            }
+        };
 
         // Login Form Handler
         document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
@@ -372,7 +561,8 @@
                     createdAt: new Date().toISOString(),
                     level: 1,
                     xp: 0,
-                    territoriesCaptured: 0
+                    territoriesCaptured: 0,
+                    authProvider: 'email'
                 });
 
                 console.log('Signup successful:', user);
@@ -506,6 +696,12 @@
             // Clear error messages
             document.getElementById('loginError').classList.remove('show');
             document.getElementById('signupError').classList.remove('show');
+            
+            // Reset error div styles
+            const signupError = document.getElementById('signupError');
+            signupError.style.background = 'rgba(239, 68, 68, 0.1)';
+            signupError.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            signupError.style.color = '#FCA5A5';
             
             if (target === 'signup') {
                 loginForm.classList.remove('visible-form');
